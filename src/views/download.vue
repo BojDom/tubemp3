@@ -24,6 +24,8 @@
 			</transition>
 			<transition name="ffade" >
 				<div id="download-button" class="button" v-if="progress>100">
+				<div class="sharethis-inline-share-buttons"></div>
+				<br/><br/>
 				<!-- <p class="top">ciao</p> -->
 				<a :href="'https://' + API_HOST + v.d">DOWNLOAD</a>
 				<p class="bottom">{{v.size}}</p>
@@ -52,6 +54,10 @@ export default {
 	},
 	computed:{
 			...mapState(['isConnected','thumbnails']),
+	},
+	beforeCreate(){
+		this.$route.params.title =  (typeof this.$route.params.title !=='string')
+			? '' :	 decodeURI(this.$route.params.title).split('_').join(' ')
 	},
 	data() {
 		return {
@@ -106,10 +112,6 @@ export default {
 			this.$forceUpdate();
 		}
 	},
-	created(){
-
-
-	},
 	mounted() {
 		new Observable.create(sub => {
 			if (this.isConnected) sub.next();
@@ -123,8 +125,14 @@ export default {
 		});
 
    },
-   title(){
-	  return 'Download'+this.num
+   metaInfo(){
+   	return {
+   		title : 'Download ' +  this.$route.params.title + ' in hight quality mp3 free!',
+		meta: [
+	        { vmid: 'description', name: 'description', content: 'Fast download of '+ this.$route.params.title + ' convert in mp3 free download, no registration or other annoying thing just music in mp3' },
+	        { vmid: 'og:image', name: 'og:image', content: 'https://i.ytimg.com/vi/'+this.$route.params.id+'/mqdefault.jpg'}
+	    ]
+   	}
    }
 }
 </script>

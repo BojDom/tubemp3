@@ -15,6 +15,7 @@ export function createRouter() {
     scrollBehavior: () => ({ y: 0 }),
     routes: [
 		//{ name:'search',path: '/search/:page/:limit/:src', component: _import('search') },
+		{ name: 'download',path:'/download/:id/:title',component:_import('download')},
 		{ name: 'download',path:'/download/:id',component:_import('download')},
 		{ name:'search',path: '/search/:src', component: _import('search') },
 		{ name:'home',path: '/', component: _import('home') },

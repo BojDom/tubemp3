@@ -15,6 +15,7 @@ export default {
 	components: {
 		
 	},
+
 	props: {
 		"v": {}
 	},
@@ -25,10 +26,12 @@ export default {
 	},
 	methods:{
 		goToDownload:function(){
+			if (typeof this.v.title !=='string') this.v.title = 'no_title'
 			this.$router.push({
                 name:'download',
                 params:{
-                	id:this.v._id
+                	id:this.v._id,
+                	title:encodeURI(this.v.title.split(' ').join('_'))
                 }
 			})
 		}

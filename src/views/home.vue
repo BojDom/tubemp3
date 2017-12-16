@@ -60,7 +60,7 @@ export default {
     return {
       title: 'TubeMp3.co - convert and download your youtube video to mp3!',
       meta: [
-        { vmid: 'description', name: 'description', content: 'ciao' }
+        { vmid: 'description', name: 'description', content: 'Convert and download free hight quality mp3 easy as 1 2 3 without registration' }
       ]
     }
   },

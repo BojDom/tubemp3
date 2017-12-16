@@ -142,6 +142,14 @@ export default {
 	beforeDestroy() {
 
 		this.$socket.disconnect();
+	},
+	metaInfo(){
+		return {
+			title:'Download free mp3 from youtube converted in high quality',
+			meta: [
+		        { vmid: 'og:image', name: 'og:image', content: LOGO }
+		      ]
+		}
 	}
 }
 </script>
