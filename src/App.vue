@@ -1,31 +1,33 @@
 <template>
 	<div id="app">
-		<div class="header f">
-			<div class="ttransition tzoom" @click="srcOpen = ! srcOpen">
-				<i class="mdi f fc mdi-magnify"></i>
-			</div>
-			<div id="logo">
-				<router-link to="/">
-					<img src="/public/img/logo.jpg" />
-				</router-link>
-			</div>
-			<div class="ttransition tzoom">
-				<div class="fullsize f fc nowrap login-icon">
-				<img v-if="usr.img" :src="usr.img"/>
-				<i @click="fbLog()" v-else class="f fc nowrap mdi mdi-login-variant">
-					<span v-if="usr && !usr.g">{{usr.nick}}</span>
-				</i>
+		<div class="header-wrapper">
+			<div class="header">
+				<div class="scrolling-header" :class="{opened:srcOpen}">
+					<search-bar @src="srcOpen=false"></search-bar>
+					<div class="header-btn">
+						<div class="ttransition tzoom" @click="srcOpen = ! srcOpen">
+							<i class="mdi f fc mdi-magnify"></i>
+						</div>
+						<div id="logo">
+							<router-link to="/">
+								<img src="/public/img/logo.jpg" />
+							</router-link>
+						</div>
+						<div class="ttransition tzoom">
+							<div class="fullsize f fc nowrap login-icon">
+							<img v-if="usr.img" :src="usr.img"/>
+							<i @click="fbLog()" v-else class="f fc nowrap mdi mdi-login-variant">
+								<span v-if="usr && !usr.g">{{usr.nick}}</span>
+							</i>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	
 		<div class="main nowrap f fc">
-			<transition name="fadeDown">
-				<fb-c v-if="srcOpen"></fb-c>
-			</transition>
-			<transition name="fadeDown">
-				<search-bar v-if="srcOpen" @src="srcOpen=false"></search-bar>
-			</transition>
+			<auto-complete v-show="srcOpen"></auto-complete>
 			<transition name="fadeDown">
 				<reconnect v-if="!isConnected"></reconnect>
 			</transition>
@@ -41,10 +43,12 @@
 		</div>
 	
 		<div id="footer" class="f ja">
-			<a>&nbsp;</a>
-			<a>&copy; Endri Domi.</a>
+			<a href="https://github.com/BojDom/tubemp3.co">
+				<img src="/public/img/git.svg"/>
+			</a>
+			<a></a>
 			<a href="https://m.me/ddoremix">
-				<img src="/public/messenger.png" style="width:40px;height:40px;"/>
+				<img src="/public/messenger.png"/>
 			</a>
 		</div>
 	</div>
@@ -58,12 +62,14 @@ import srcBar from './components/srcBar.vue';
 import noQuota from './components/noQuota.vue';
 import reconnect from './components/reconnect.vue';
 import { mapState } from 'vuex';
+import autoComplete from './components/suggestions.vue'
 import _ from 'lodash.debounce';
 
 export default {
 	components: {
 		'reconnect': reconnect,
 		'search-bar': srcBar,
+		'auto-complete' : autoComplete,
 		'fb-c':fbC,
 		'noQuota':noQuota
 	},
@@ -73,7 +79,7 @@ export default {
 			fbUrl:'',
 			popup:'',
 			noQuota:false,
-			srcOpen: true
+			srcOpen: false
 		}
 	},
 	sockets:{
@@ -129,8 +135,12 @@ export default {
 				},200)
 			}
 		},140),
+		"$route":function(){
+			this.srcOpen=false;
+		}
 	},
 	beforeDestroy() {
+
 		this.$socket.disconnect();
 	}
 }
@@ -141,7 +151,7 @@ export default {
 @theme: "./less/themes/dev";
 @import "@{theme}";
 @import './less/main.less';
-.header {
+.header-wrapper {
 	height: @headerHeight;
 	background: @headerBg;
 	position: absolute;
@@ -152,24 +162,51 @@ export default {
 	margin: 0 auto;
 	padding: 10px 10%;
 	text-align: center;
-	&>div {
-			flex-grow: 1;
-			width: 0;
-			height: 80%;
-			i {
-				height: 100%;
-				font-size: 2.5rem;
-				width:100%;
-				justify-content: space-around;
-	            background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.01) 40%, rgba(255, 255, 255, 0.07) 100%);
-	            border-bottom:2px solid hsla(0, 0%, 100%, .24);
-				span {font-size:1.3rem;}
-				&:hover {
-					text-shadow: 2px 2px 10px white, -2px -2px 10px white;
-					cursor: pointer;
+	.header{
+		margin: 0 auto;
+		max-width: 500px;
+		overflow: hidden;
+	}
+	.scrolling-header {
+		white-space: nowrap;
+		transition:transform .3s ease-out;
+		transform: translateX(-100%);
+
+		&>div {
+			display: inline-flex;
+			justify-content:space-between;
+			width: 100%;
+		}
+		&.opened {
+			transform: translateX(0%);
+		}
+	}
+	.header,.scrolling-header, .header-btn {
+		height: @headerHeight;
+	}
+	.header-btn {
+
+	}
+	.header-btn {
+		&>div {
+				flex-grow: 1;
+				width: 0;
+				height: 80%;
+				i {
+					height: 100%;
+					font-size: 2.5rem;
+					width:100%;
+					justify-content: space-around;
+		            background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.01) 40%, rgba(255, 255, 255, 0.07) 100%);
+		            border-bottom:2px solid hsla(0, 0%, 100%, .24);
+					span {font-size:1.3rem;}
+					&:hover {
+						text-shadow: 2px 2px 10px white, -2px -2px 10px white;
+						cursor: pointer;
+					}
 				}
 			}
-		}
+	}
 	#logo {
 		flex-grow: 3;
 		a {
@@ -230,6 +267,7 @@ export default {
 	text-align: center;
 	width:100%;
 	a {color:#fff;flex-grow:1;width:0;white-space: nowrap;}
+	img {height: 40px;}
 
 }
 </style>

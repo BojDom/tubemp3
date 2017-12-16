@@ -1,42 +1,8 @@
 <template>
 	<div :id="'vid'+v._id" class="f fc video">
 		<div class="thumb">
-			<img @click="getLink()" :src="v.img" />
+			<img @click="goToDownload()" :src="v.img" />
 			<div class="dur f">{{v.dur}}</div>
-			<transition name="fade">
-				<div class="bg f fc nowrap" v-show="selected">
-					<transition name="slideDown">
-						<div v-show="spinner">
-							<spinner :show="!v.d"></spinner>
-						</div>
-					</transition>
-					<div class="f fc ja download-buttons">
-						<a class="f fc" v-show="v.d" :href="'https://' + API_HOST + v.d">
-								<i class="material-icons mdi mdi-download"></i>
-								<i>{{v.size}}</i>
-						</a>
-						<div class="message">{{$t(v.msg)}}</div>
-					</div>
-					<div class="progBar" :class="{
-												'g':progress>0,
-												'r':progress<0
-										}" :style="{'width':progress+'%'}">
-					</div>
-				</div>
-			</transition>
-		</div>
-		<transition name="slideDown">
-		<div class="wave" v-if="v.wave || progress > 100">
-			<div :style="{'width':progress+'%'}">
-				<img :src="'https://'+API_HOST+'/wave/'+v._id"/>
-			</div>
-		</div>
-		</transition>
-		<div class="stats f" v-if="v.viewCount && $route.name === 'download'">
-			<div>&nbsp;</div>
-			<div class="view-count">
-				<i class="material-icons mdi mdi-eye"></i> {{v.viewCount}}
-			</div>
 		</div>
 		<div class="title">
 			<h3>{{v.title}}</h3>
@@ -44,57 +10,26 @@
 	</div>
 </template>
 <script>
-import tween from '@tweenjs/tween.js'
-import spinner from './Spinner';
-import http from '../router/http';
-import { mapState } from 'vuex';
 export default {
 	name: 'thumbVideo',
 	components: {
-		'spinner': spinner
+		
 	},
 	props: {
 		"v": {}
 	},
 	data() {
 		return {
-			selected: false,
-			progress:0,
-			spinner: false,
-			raf: false,
-			anim: null,
-			ext: 'm4a',
-			API_HOST : API_HOST
+
 		}
 	},
-	watch:{
-		"v.progress":function(n){
-			this.anim.to({x:n},300).start()
-		},
-	},
-	mounted(){
-		var self = this;
-		this.anim = new tween.Tween({x:0}).onUpdate(function(x){
-			self.progress=x.x;
-		});
-	},
-	methods: {
-		getLink() {
-			if (this.$route.name !== 'download')
+	methods:{
+		goToDownload:function(){
 			this.$router.push({
-                        name:'download',
-                        params:{
-                            id:this.v._id
-                        }
-             })			
-			if (this.selected) return null;
-			this.selected = true;
-			this.spinner = true;
-			this.dlink = false;
-			this.v.msg = "search_source";
-			this.$socket.emit('getLink', {
-				id: this.v._id,
-				ext: this.ext
+                name:'download',
+                params:{
+                	id:this.v._id
+                }
 			})
 		}
 	}

@@ -2,19 +2,17 @@
 <div class="search-bar">
      
     <form class="f fullw nowrap searchbar" @submit.prevent="startSrc()">
+        <button type="button" v-if="q.length>0">
+            <i class="mdi mdi-comment-remove-outline" @click="q=''"></i>
+        </button>
         <input type="text" 
-    @keyup.down="selectSuggested(true)"
-    @keyup.up="selectSuggested(false)"
-    @keyup="getAutoComplete()" v-model="q" :placeholder="placeholder" />
-   
+        @keyup="getAutoComplete()" v-model="q" :placeholder="placeholder" />
+
         <button type="button">
 		    <i class="mdi mdi-magnify" @click="startSrc()"></i>
 		</button>
 	</form>
 
-        <div class="suggestions" v-for="(s,i) in autoCompleteList" :key="s" >
-            <div :class="{'selected':selectedSuggested==i}" @click="suggest(s)">{{s}}</div>
-        </div>
 </div>
 </template>
 <script>
@@ -34,20 +32,16 @@ export default {
 				q:'',
 				page:1,
 				itemsPerPage:10,
-                selectedSuggested:-1
 			}
 		},
         computed:{
-            ...mapState(['autoCompleteList'])
+            ...mapState(['autoCompleteList','selectedSuggested'])
         },
         methods:{
 			startSrc(){
                 this.$store.commit('SOCKET_AUTOCOMPLETELIST',[])
                 if (this.$store.state.isConnected && this.q.length>2)
 				{
-                    this.$emit('src')
-                    if (this.selectedSuggested>-1)
-                    this.q=this.autoCompleteList[this.selectedSuggested];
                     this.$router.push({
                         name:'search',
                         params:{
@@ -58,18 +52,6 @@ export default {
                     })
                 }
 			},
-            suggest(text){
-                this.q = text;
-                this.startSrc()
-            },
-            selectSuggested(bool){
-                if (bool&&this.selectedSuggested<this.autoCompleteList.length) {
-                    this.selectedSuggested++;
-                }
-                else if (!bool && this.selectedSuggested>-1) {
-                    this.selectedSuggested--;
-                }
-            },
             getAutoComplete:_(function(){
                 if (this.$store.state.isConnected && this.q && this.q.length>2 ) 
                         this.$socket.emit('autocomplete',{q:this.q})
@@ -77,7 +59,7 @@ export default {
         }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 @theme: "../less/themes/dev";
 @import "@{theme}";
 
@@ -101,19 +83,5 @@ export default {
     }
 }
 
-.suggestions {
-    padding: 7px 20px;
-    font-size:18px;
-    div {
-        cursor:pointer;
-        border-bottom:1px solid fadeout(@textColor, 50%);
-        padding: 5px 10px;
-        &:hover {
-            background:fadeout(@textColor, 80%);
-        }
-        &.selected {
-            background:fadeout(@textColor,60%)
-        }
-    }
-}
+
 </style>

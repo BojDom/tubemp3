@@ -13,7 +13,7 @@
 </template>
 <script>
 import loading from '../components/loading';
-import thumbVideo from '../components/thumbVideo';
+import thumbVideo from '../components/video';
 import { Observable } from 'rx-lite';
 import vueInf from '../components/InfiniteLoading.vue';
 import {mapState} from 'vuex';

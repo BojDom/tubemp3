@@ -37,7 +37,7 @@
 </template>
 <script>
 import loading from '../components/loading';
-import thumbVideo from '../components/thumbVideo';
+import thumbVideo from '../components/video';
 import { Observable } from 'rx-lite';
 import {mapState} from 'vuex';
 import tween from '@tweenjs/tween.js'
