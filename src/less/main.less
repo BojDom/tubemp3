@@ -1,0 +1,72 @@
+//@import "./dynamicClass";
+@import "./font.less";
+
+img {
+  opacity: @imgOpacity;
+}
+
+body {
+  margin: 0;
+  font-size: 16px;
+  background-color: @color1;
+  color:@textColor;
+  max-width: 100vw;
+}
+#app {
+    font-family: @fontFamily;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+.f {
+  display: flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+}
+.ja {
+	justify-content:space-around;
+}
+.fullw {
+  width: 100%;
+}
+.fullsize {
+  height: 100%;
+  width:100%;
+}
+.nowrap {
+  flex-wrap:nowrap;
+}
+.fc {
+	flex-direction:column;
+}
+.ttransition {
+  transition: transform .2s ease-in;
+}
+.tzoom {
+  &:hover {
+    transform: scale(1.2);
+  }
+}
+input,button {
+  background:transparent;
+  border:none;
+  color:@textColor;
+}
+.scroll::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: transparent;
+	border-radius: 10px;
+}
+.scroll::-webkit-scrollbar
+{
+	width: 10px;
+	margin-right: 5px;
+	background-color: transparent;
+}
+.scroll::-webkit-scrollbar-thumb
+{
+	background-color: #AAA;
+	border-radius: 10px;
+}

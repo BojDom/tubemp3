@@ -1,0 +1,15 @@
+@color1:hsl(351,78%,12%);
+@imgOpacity:1;
+@textColor:#ccc;
+@fontFamily:"Muli";
+@headerHeight:90px;
+@footerHeight:60px;
+@footerBg:hsl(1,20%,90%);
+@pageHeight: ~"calc(100vh - " (@headerHeight + @footerHeight) ~")";
+
+@headerBg:~"linear-gradient(to bottom, "tint(fadeout(@color1, 40%),20%)~" 0%,"fadeout(@color1,60%)~" 100%)";
+@classes: body;
+@body:  ;
+@downloadButtonsColor:lighten(@color1,72%);
+
+@static:"/public";

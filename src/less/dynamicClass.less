@@ -1,0 +1,52 @@
+// main: main.less
+
+/***
+
+## Permette di aggiungere classi dinamicamente e definirne le proprieta
+
+Funzionamento:
+
+1- definire nella variabile classes i nomi delle classi da assegbare
+2- per ogni classe assegnata definire una variabile con il medesimo nome contenente le proprieta css
+3- richiamare il comando .iter(0);
+
+Esempio:
+	
+	@import 'dynamicClass.less';
+	@classes: header content;
+	@header: background red, zoom 1;
+	@content: background green,font-style 22px;
+	.iter(0);
+
+***/
+
+
+//@classes: ;
+
+.for (@list, @code) {
+    & {
+        .loop(@i: 1) when (@i =< length(@list)) {
+            @value: extract(@list, @i);
+            @code();
+            .loop(@i + 1);
+        }
+        .loop();
+    }
+}
+
+
+.iter(@n) when(@n < length(@classes)) {
+	@el:extract(@classes,@n+1);
+
+	.for(@@el,{
+		@prop:extract(@value,1);
+		.@{el} {
+			@{prop} : extract(@value,2);
+		}
+		});
+
+	.iter(@n+1)
+}
+
+
+.iter(0);
