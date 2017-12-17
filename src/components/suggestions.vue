@@ -23,7 +23,7 @@ export default {
                     this.$router.push({
                         name:'search',
                         params:{
-                            src:text.replace(' ','_')
+                            src:text.split(' ').join('_')
                         }
                     })
             },

@@ -27,7 +27,7 @@
 				<div class="sharethis-inline-share-buttons"></div>
 				<br/><br/>
 				<!-- <p class="top">ciao</p> -->
-				<a :href="'https://' + API_HOST + v.d">DOWNLOAD</a>
+				<a :href="'https://' + API_HOST + v.d" target="_blank">DOWNLOAD</a>
 				<p class="bottom">{{v.size}}</p>
 				</div>
 			</transition>

@@ -47,7 +47,7 @@ export default {
                         params:{
                             //limit:10,
                             //page:1,
-                            src:this.q.replace(' ','_')
+                            src:this.q.split(' ').join('_')
                         }
                     })
                 }
