@@ -22,7 +22,6 @@ export function createApp(ssrContext) {
 	// create store and router instances
 	const store = createStore();
 	const router = createRouter();
-	console.log('ssr',ssrContext.lang)
 	const i18n = createI18n(ssrContext.lang);
 	// sync the router with the vuex store.
 	// this registers `store.state.route`
