@@ -5,14 +5,14 @@ const express = require('express');
 const favicon = require('serve-favicon');
 const compression = require('compression');
 const resolve = file => path.resolve(__dirname, file);
-const {
-	createBundleRenderer
-} = require('vue-server-renderer');
+const {	createBundleRenderer } = require('vue-server-renderer');
 const config = require('./tpl');
 const isProd = process.env.NODE_ENV === 'production';
 const useMicroCache = process.env.MICRO_CACHE !== 'false';
 const ioClient = require('socket.io-client'),
 	jwt = require('jsonwebtoken');
+
+const { directive } = require('vue-i18n-extensions');
 
 const serverInfo =
 	`express/${require('express/package.json').version} ` +
@@ -20,7 +20,7 @@ const serverInfo =
 
 const app = express();
 
-//if (isProd)
+if (isProd)
 	var ioc = ioClient.connect(process.env.TELEGRAM_URL, {
 		secure: true,
 		'query': 'token=' + jwt.sign({
@@ -40,7 +40,10 @@ function createRenderer(bundle, options) {
 			maxAge: 1000 * 60 * 15
 		}),
 		basedir: resolve('./dist'),
-		runInNewContext: false
+		runInNewContext: false,
+		directives: {
+      		t: directive
+    	}
 	}));
 }
 
@@ -92,6 +95,8 @@ const microCache = LRU({
 const isCacheable = req => useMicroCache;
 
 function render(req, res) {
+	var lang = req.headers['accept-language'];
+	lang =  (!lang || lang.length<3) ? lang = 'en-US' : lang.substr(0,5);
 
 	const s = Date.now();
 	/* da togliere queste tre righe */
@@ -126,7 +131,8 @@ function render(req, res) {
 
 	const context = {
 		title: 'TubeMp3.co', // default title
-		url: req.url
+		url: req.url,
+		lang : lang
 	};
 	renderer.renderToString(context, (err, html) => {
 		if (err) {

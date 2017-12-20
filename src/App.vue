@@ -94,7 +94,6 @@ export default {
 		}
 	},
 	beforeMount() {
-		this.$i18n.locale='it';
 		new Observable.create(sub => {
 			if (this.isConnected) sub.next();
 			else this.$watch("isConnected", ()=>{ if (this.isConnected) sub.next();
@@ -145,9 +144,11 @@ export default {
 	},
 	metaInfo(){
 		return {
-			title:'Download free mp3 from youtube converted in high quality',
+			title:this.$t('homeTitle'),
 			meta: [
-		        { vmid: 'og:image', name: 'og:image', content: LOGO }
+		        { vmid: 'og:image', property: 'og:image', content: LOGO },
+		        { vmid: 'description', property: 'description', content: this.$t('homeDescription') },
+		        { vmid: 'og:description', property: 'og:description', content: this.$t('homeDescription') }
 		      ]
 		}
 	}

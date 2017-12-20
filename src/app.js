@@ -5,7 +5,7 @@ import { createStore } from "./store";
 import { createRouter } from "./router";
 import { sync } from "vuex-router-sync";
 import * as filters from "./util/filters";
-import i18n from "./store/i18n";
+import { createI18n } from "./store/i18n";
 import vso from 'vue-socket.io';
 import scc from 'socketcluster-client';
 import vueMeta from 'vue-meta';
@@ -22,7 +22,8 @@ export function createApp(ssrContext) {
 	// create store and router instances
 	const store = createStore();
 	const router = createRouter();
-
+	console.log('ssr',ssrContext.lang)
+	const i18n = createI18n(ssrContext.lang);
 	// sync the router with the vuex store.
 	// this registers `store.state.route`
 	sync(store, router);
