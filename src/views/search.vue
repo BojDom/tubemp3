@@ -55,7 +55,7 @@ import {mapState} from 'vuex';
                 this.$store.commit('SOCKET_AUTOCOMPLETELIST',[])
 				this.loading=true;
 				this.$socket.emit('search',{
-					src:this.$router.currentRoute.params.src.replace('_','+'),
+					src:this.$router.currentRoute.params.src.split('_').join('+'),
 					pageToken:this.pageToken
 				})
 			}

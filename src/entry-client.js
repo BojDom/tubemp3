@@ -20,7 +20,7 @@ import { createApp } from './app';
 });*/
 
 const { app, router, store } = createApp({
-  lang:'en-US'
+  lang: navigator.language || navigator.userLanguage
 });
 
 // prime the store with server-initialized state.

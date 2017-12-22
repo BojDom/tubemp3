@@ -96,7 +96,7 @@ const isCacheable = req => useMicroCache;
 
 function render(req, res) {
 	var lang = req.headers['accept-language'];
-	lang =  (!lang || lang.length<3) ? lang = 'en-US' : lang.substr(0,5);
+	lang =  (!lang || lang.length<2) ? lang = 'en' : lang.substr(0,2);
 
 	const s = Date.now();
 	/* da togliere queste tre righe */

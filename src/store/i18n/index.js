@@ -5,12 +5,12 @@ import it from "./it.js";
 
 Vue.use(VueI18n);
 var messages = {
-	"en-US": en,
-	"it-IT": it
+	"en": en,
+	"it": it
 }
 
 export function createI18n(lang) {
-	var locale = (Object.keys(messages).indexOf(lang) > -1) ? lang : 'en-US';
+	var locale = (Object.keys(messages).indexOf(lang) > -1) ? lang : 'en';
 	return new VueI18n({
 		locale: locale,
 		messages: messages
