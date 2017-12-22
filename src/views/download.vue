@@ -1,5 +1,5 @@
 <template>
-	<div id="download-page" >
+	<div id="download-page" class="scroll" >
 		<div v-if="v.title" class="f fc">
 			<thumb-video :v="v">
 			</thumb-video>
@@ -158,6 +158,7 @@ export default {
 #download-page {
 	justify-content:flex-start;
 	align-items:center;
+	overflow-y: scroll;
 }
 .button {
 	position: relative;
