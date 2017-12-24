@@ -17,7 +17,6 @@
 							<div class="fullsize f fc nowrap login-icon">
 							<img v-if="usr.img" :src="usr.img"/>
 							<a v-if="!usr.img && fbUrl" :href="fbUrl" target="_blank" class="f fc nowrap mdi mdi-login-variant">
-								<span v-if="usr && !usr.g">{{usr.nick}}</span>
 							</a>
 							</div>
 						</div>
@@ -88,6 +87,9 @@ export default {
 		},
 		fbPopClose:function(){
 			try {this.popup.close()}catch(r){console.log(r)}
+		},
+		login:function(data){
+			this.fbUrl=data.fbUrl
 		},
 		noQuota:function(){
 			this.noQuota=true;
@@ -197,7 +199,8 @@ export default {
 				flex-grow: 1;
 				width: 0;
 				height: 80%;
-				i {
+				i,a{
+					color:@textColor;
 					height: 100%;
 					font-size: 2.5rem;
 					width:100%;
