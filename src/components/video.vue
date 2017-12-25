@@ -81,7 +81,7 @@ export default {
 }
 
 .thumb {
-	width: 320px;
+	width: 100%;
 	margin: 0 auto;
 	height: 0;
 	padding-bottom: 100%*(9/16);

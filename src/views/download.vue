@@ -13,8 +13,10 @@
 			<h4> {{$t(v.msg)}} </h4>
 
 			<div class="wave">
-			<div :style="{'width':progress+'%'}">
-				<img @error="retryImg" :src="'https://'+ API_HOST +'/wave/'+v._id+'?bo='+rand"/>
+			<div :style="waveContainerStyle">
+				<div class="wave-bg" :style="waveStyle">
+					<img class="transparent" @error="retryImg()" :src="'https://'+ API_HOST +'/wave/'+v._id+'?bo='+rand"/>
+				</div>
 			</div>
 			</div>
 
@@ -23,12 +25,23 @@
 				<bar v-if="progress<101" :value="progress" style="width:150px;"></bar>
 			</transition>
 			<transition name="ffade" >
-				<div id="download-button" class="button" v-if="progress>100">
-				<div class="sharethis-inline-share-buttons"></div>
-				<br/><br/>
-				<!-- <p class="top">ciao</p> -->
-				<a :href="'https://' + API_HOST + v.d" target="_blank">DOWNLOAD</a>
-				<p class="bottom">{{v.size}}</p>
+				<div v-if="progress>100" class="fullw f fc">
+					<div class="sharethis-inline-share-buttons"></div>
+
+					<range :value="rangeValue" @change="rangeChanged($event)">
+						<slot text="Ritaglia l audio a tuo piacimento"></slot>
+					</range>
+					<div v-if="!showCut" id="download-button" class="button">
+						<a :href="'https://' + API_HOST + v.d" target="_blank">DOWNLOAD</a>
+						<p class="bottom">{{v.size}}</p>
+					</div>
+					<div v-else class="button" id="cutButton">
+						<a @click="cut">
+							<i class="mdi mdi-content-cut"></i> | 
+								{{$t('cut')}}
+						</a>
+					</div>
+
 				</div>
 			</transition>
 		</div>
@@ -40,17 +53,19 @@
 <script>
 import loading from '../components/loading';
 import thumbVideo from '../components/video';
-import { Observable } from 'rx-lite';
+import { Observable , Subject} from 'rx-lite';
 import {mapState} from 'vuex';
 import tween from '@tweenjs/tween.js'
-import nouislider from 'nouislider'
+import debounce from 'lodash.debounce';
+import range from '../components/range';
 import bar from '../components/ProgressBar'
 export default {
 	name: "download",
 	components:{
 		'thumb-video':thumbVideo,
 		'loading':loading,
-		'bar':bar
+		'bar':bar,
+		'range':range
 	},
 	computed:{
 			...mapState(['isConnected','thumbnails']),
@@ -70,8 +85,13 @@ export default {
 			},
 			num:0,
 			rand:0,
+			rangeValue:[0,100],
+			slider:null,
 			progress:0,
-			anim:null
+			anim:null,
+			showCut:false,
+			waveStyle:{},
+			waveContainerStyle:{}
 		}
 	},
 	methods:{
@@ -94,10 +114,35 @@ export default {
 				})
 			})
 		},
+		rangeChanged(val){
+			var isChanged = (val[0]!=this.rangeValue[0] || val[1]!=this.rangeValue[1])
+			this.showCut = isChanged;
+
+			this.rangeValue=val;
+			if (!isChanged) return;
+			this.waveStyle={
+				width:(3.20 * val[1]) + 'px',
+				background:'url(https://'+ API_HOST +'/wave/'+this.v._id+'?bo='+this.rand+')',
+				transform: 'translateX(-'+~~(3.20 * val[0])+'px)',
+			}
+			this.waveContainerStyle={
+				transform: 'translateX('+~~(3.20 * val[0])+'px)',
+				width:3.2*(val[1] - val[0]) + 'px'
+			}
+		},
 		retryImg:function(){
 			setTimeout(()=>{
 				this.rand=Math.random()
-			},200)
+			},100)
+			this.imgObs.onNext()
+		},
+		cut(){
+			this.progress=0;
+			this.showCut = false;
+			this.$socket.emit('cut',{
+				id:this.v.id,
+				value:this.rangeValue
+			});
 		}
 	},
 	sockets:{
@@ -107,7 +152,7 @@ export default {
 			Object.keys(obj).map(k=>{
 				//if (k!=='progress')
 				this.v[k]=obj[k];
-				if (k==='wave') this.rand = Math.random()
+				if (k==='wave') this.retryImg();
 			})
 			this.$forceUpdate();
 		}
@@ -119,18 +164,26 @@ export default {
 		}).take(1).subscribe(ok => {
 			this.getLink()
 		});
-
+		this.imgObs= new Subject();
+		this.imgObs.debounce(300).subscribe(()=>{
+			this.waveStyle={				
+				background:'url(https://'+ API_HOST +'/wave/'+this.v._id+'?bo='+this.rand+')'
+			}
+		});
 		this.anim = new tween.Tween({x:0}).easing(tween.Easing.Quadratic.InOut).onUpdate(x=>{
 			this.progress=~~x.x;
-		});
 
+			this.waveContainerStyle={
+				width: (3.2 * x.x) + 'px'
+			}
+		});
    },
    metaInfo(){
    	return {
    		title : 'Download ' +  this.$route.params.title + ' in hight quality mp3 free!',
 		meta: [
-	        { vmid: 'description', name: 'description', content: 'Fast download of '+ this.$route.params.title + ' convert in mp3 free download, no registration or other annoying thing just music in mp3' },
-	        { vmid: 'og:image', name: 'og:image', content: 'https://i.ytimg.com/vi/'+this.$route.params.id+'/mqdefault.jpg'}
+	        { vmid: 'description', property: 'description', content: 'Fast download of '+ this.$route.params.title + ' convert in mp3 free download, no registration or other annoying thing just music in mp3' },
+	        { vmid: 'og:image', property: 'og:image', content: 'https://i.ytimg.com/vi/'+this.$route.params.id+'/mqdefault.jpg'}
 	    ]
    	}
    }
@@ -140,11 +193,16 @@ export default {
 @theme: "../less/themes/dev";
 @import "@{theme}";
 .wave {
-		div {
+	position: relative;
+	height: 80px;
+		&>div {
 			 overflow: hidden;
+			 position: absolute;
+			 top:0;
+			 left: 0;
 		}
 		width:320px;
-		img {
+		.wave-bg {
 			width:320px;
 			height: 80px;
 		}
@@ -159,9 +217,12 @@ export default {
 	justify-content:flex-start;
 	align-items:center;
 	overflow-y: scroll;
+	overflow-x: hidden;
 }
 .button {
 	position: relative;
+	margin: 20px auto;
+	text-align: center;
 	p {
 	    background: hsl(0, 0%, 13%);
 	    display: block;
@@ -186,12 +247,10 @@ export default {
 	    color: hsl(0, 0%, 100%);
 	    font: 17px/50px Helvetica, Verdana, sans-serif;
 	    text-decoration: none;
-	    text-align: center;
-	    text-transform: uppercase;
-	    background: hsl(193, 100%, 46%);
-	    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,hsl(193, 100%, 46%)), color-stop(100%,hsl(191, 100%, 38%)));
-	    background: -webkit-linear-gradient(top, hsl(193, 100%, 46%) 0%,hsl(191, 100%, 38%) 100%);
-	    background: linear-gradient(top, #00b7ea 0%,#009ec3 100%);
+	    text-transform: uppercase;background: #1e5799;
+	    background: #1e5799;
+		background: -webkit-linear-gradient(top, hsl(212,67%,36%) 0%,hsl(207,69%,51%) 50%,hsl(208,73%,46%) 51%,hsl(206,70%,70%) 100%);
+		background: linear-gradient(to bottom, hsl(212,67%,36%) 0%,hsl(207,69%,51%) 50%,hsl(208,73%,46%) 51%,hsl(206,70%,70%) 100%);
 
 	 }
 	a, p {
@@ -210,7 +269,11 @@ export default {
 	    margin: -10px 0 0 10px;
 	}
 }
-
+	#cutButton a {
+		background: #ffc533;
+		background: -webkit-linear-gradient(top, hsl(43,100%,60%) 0%,hsl(47,70%,44%) 50%,hsl(43,73%,47%) 51%,hsl(44,80%,64%) 100%);
+		background: linear-gradient(to bottom, hsl(43,100%,60%) 0%,hsl(47,70%,44%) 50%,hsl(43,73%,47%) 51%,hsl(44,80%,64%) 100%);
+	}
 
 
 

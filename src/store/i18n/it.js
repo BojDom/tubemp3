@@ -7,5 +7,6 @@ export default {
     "source_found":"Apposhht solo un attimo",
     "search_source":"Recupero il link",
     "complete":"download pronto :)",
+    "cut":"ritaglia",
     "login":"accedi"
 }
