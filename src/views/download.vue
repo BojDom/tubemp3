@@ -18,6 +18,8 @@
 					<img class="transparent" @error="retryImg()" :src="'https://'+ API_HOST +'/wave/'+v._id+'?bo='+rand"/>
 				</div>
 			</div>
+
+				<div :style="'opacity:0.15;background-image:url(https://'+ API_HOST +'/wave/'+v._id+'?bo='+rand+')'"></div>
 			</div>
 
 
@@ -123,11 +125,8 @@ export default {
 			this.rangeValue=val;
 			if (!isChanged) return;
 			
-			this.waveStyle={
-				width:(3.20 * val[1]) + 'px',
-				background:'url(https://'+ API_HOST +'/wave/'+this.v._id+'?bo='+this.rand+')',
-				transform: 'translateX(-'+~~(3.20 * val[0])+'px)',
-			}
+			this.waveStyle.transform = 'translateX(-'+~~(3.20 * val[0])+'px)';
+
 			this.waveContainerStyle={
 				transform: 'translateX('+~~(3.20 * val[0])+'px)',
 				width:3.2*(val[1] - val[0]) + 'px'
@@ -170,7 +169,7 @@ export default {
 		this.imgObs= new Subject();
 		this.imgObs.debounce(300).subscribe(()=>{
 			this.waveStyle={				
-				background:'url(https://'+ API_HOST +'/wave/'+this.v._id+'?bo='+this.rand+')'
+				backgroundImage:'url(https://'+ API_HOST +'/wave/'+this.v._id+'?bo='+this.rand+')'
 			}
 		});
 		this.anim = new tween.Tween({x:0}).easing(tween.Easing.Quadratic.InOut).onUpdate(x=>{
@@ -204,7 +203,7 @@ export default {
 			 top:0;
 			 left: 0;
 		}
-		&,img,.wave-bg {
+		&,img,div {
 			background-size: contain;
 			width: 320px;
 			height: 80px;
