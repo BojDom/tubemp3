@@ -123,7 +123,7 @@ export default {
     box-shadow: inset 0 1px 1px #F0F0F0, 0 3px 6px -5px #BBB
 }
 .noUi-connect {
-    background: #3FB8AF;
+    background: hsl(206,66%,55%);
     border-radius: 4px;
     box-shadow: inset 0 0 3px rgba(51, 51, 51, .45);
     -webkit-transition: background 450ms;

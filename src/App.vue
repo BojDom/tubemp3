@@ -16,8 +16,8 @@
 						<div class="ttransition tzoom">
 							<div class="fullsize f fc nowrap login-icon">
 							<img v-if="usr.img" :src="usr.img"/>
-							<a v-if="!usr.img && fbUrl" :href="fbUrl" target="_blank" class="f fc nowrap mdi mdi-login-variant">
-							</a>
+							<i @click="fbLog()" v-else class="f fc nowrap mdi mdi-login-variant">
+							</i>
 							</div>
 						</div>
 					</div>
@@ -116,6 +116,10 @@ export default {
 		requestAnimationFrame(animate);
 	},
 	methods: {
+		fbLog(){
+			if (this.usr.fbUrl)
+			 this.popup=window.open(this.usr.fbUrl);
+		}
 	},
 	computed: {
 		...mapState(['connState', 'isConnected','usr'])

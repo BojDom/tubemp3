@@ -98,15 +98,18 @@ export default {
 		getLink:function(){
 			new Observable.create(sub => {
 				this.id = this.$route.params.id;
+					// esecuzione normale
 				if (this.thumbnails.length>0)
 					this.v = this.thumbnails.find(vid=>{
 						return vid._id === this.id
 					})
+					// accesso url diretto o refresh
 				if (!this.v || !this.v.title) this.$socket.emit('getVid',{id:this.id},(err,data)=>{
 					if (err) return;
 					this.v=data;
 					sub.next()
 				})
+					// what ?
 				else sub.next();
 			}).take(1).subscribe(ok => {
 				this.$socket.emit('getLink', {
@@ -117,9 +120,9 @@ export default {
 		rangeChanged(val){
 			var isChanged = (val[0]!=this.rangeValue[0] || val[1]!=this.rangeValue[1])
 			this.showCut = isChanged;
-
 			this.rangeValue=val;
 			if (!isChanged) return;
+			
 			this.waveStyle={
 				width:(3.20 * val[1]) + 'px',
 				background:'url(https://'+ API_HOST +'/wave/'+this.v._id+'?bo='+this.rand+')',
@@ -201,9 +204,9 @@ export default {
 			 top:0;
 			 left: 0;
 		}
-		width:320px;
-		.wave-bg {
-			width:320px;
+		&,img,.wave-bg {
+			background-size: contain;
+			width: 320px;
 			height: 80px;
 		}
 }
