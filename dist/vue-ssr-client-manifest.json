@@ -5,14 +5,14 @@
     "1.c2c209822f73f391cc93.js",
     "2.66e76182cd917e962250.js",
     "3.83d29cfe4c2a10dbf8ff.js",
-    "vendor.2abdad027477bf763f56.js",
+    "vendor.a8aadabbe7de856175a1.js",
     "app.a4860b23b650c0d02587.js",
-    "manifest.d8c7b6eef682de736a1c.js",
+    "manifest.258be6d862aad4827a31.js",
     "common.a4860b23b650c0d02587.css"
   ],
   "initial": [
-    "manifest.d8c7b6eef682de736a1c.js",
-    "vendor.2abdad027477bf763f56.js",
+    "manifest.258be6d862aad4827a31.js",
+    "vendor.a8aadabbe7de856175a1.js",
     "app.a4860b23b650c0d02587.js"
   ],
   "async": [
