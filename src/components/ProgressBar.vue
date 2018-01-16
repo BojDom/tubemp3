@@ -25,10 +25,10 @@ export default {
   },
   mounted(){
     this.circle= new p.Circle('#ccc',{
-      strokeWidth: 3,
+      strokeWidth: 20,
       color: '#eee',
       trailColor: '#777',
-      trailWidth: 2.8,
+      trailWidth: 2,
       duration: 1400,
       from: {color: '#FF0000'},
       to: {color: '#00FF00'},

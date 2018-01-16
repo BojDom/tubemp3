@@ -3,6 +3,14 @@
 		<div v-if="v.title" class="f fc">
 			<thumb-video :v="v">
 			</thumb-video>
+			<div class="player f ja" v-if="progress>0">
+				<i class="material-icons mdi mdi-play" v-if="!isPlaying"></i>
+				<i v-else class="material-icons mdi mdi-pause"></i>
+
+				<div id="playerWave">
+					<img  :src="'https://'+ API_HOST +'/wave/'+v._id+'?bo='+rand"/>
+				</div>
+			</div>
 			<div class="stats f" v-if="v.viewCount && $route.name === 'download'">
 				<div>&nbsp;</div>
 				<div class="view-count">
@@ -10,29 +18,34 @@
 				</div>
 				
 			</div>
-			<h4> {{$t(v.msg)}} </h4>
+			<h4> {{$t(v.msg)}} {{(progress && progress <100) ? '...'+ progress +'%':''}} </h4>
 
 			<div class="wave">
 			<div :style="waveContainerStyle">
+
 				<div class="wave-bg" :style="waveStyle">
+					<!-- server solo per il retry -->
 					<img class="transparent" @error="retryImg()" :src="'https://'+ API_HOST +'/wave/'+v._id+'?bo='+rand"/>
 				</div>
+		
 			</div>
 
-				<div :style="'opacity:0.15;background-image:url(https://'+ API_HOST +'/wave/'+v._id+'?bo='+rand+')'"></div>
+				<div class="wave-bg" :style="'opacity:0.15;background-image:url(https://'+ API_HOST +'/wave/'+v._id+'?bo='+rand+')'"/>
+
+					<div class="vertical-separator" :style="leftEdge">
+						<i class="material-icons mdi mdi-content-cut"/>
+					</div>
+				<div class="vertical-separator" :style="[{left:'318px'},rightEdge]">
+					<i class="material-icons mdi mdi-content-cut"/>
+
+				 </div>
+				<range :value="rangeValue" @change="rangeChanged($event)"/>
 			</div>
 
-
-			<transition name="ffade">
-				<bar v-if="progress<101" :value="progress" style="width:150px;"></bar>
-			</transition>
 			<transition name="ffade" >
-				<div v-if="progress>100" class="fullw f fc">
+				<div v-if="v.d" class="fullw f fc">
 					<div class="sharethis-inline-share-buttons"></div>
 
-					<range :value="rangeValue" @change="rangeChanged($event)">
-						<slot text="Ritaglia l audio a tuo piacimento"></slot>
-					</range>
 					<div v-if="!showCut" id="download-button" class="button">
 						<a :href="'https://' + API_HOST + v.d" target="_blank">DOWNLOAD</a>
 						<p class="bottom">{{v.size}}</p>
@@ -93,7 +106,11 @@ export default {
 			anim:null,
 			showCut:false,
 			waveStyle:{},
-			waveContainerStyle:{}
+			rightEdge:{},
+			leftEdge:{},
+			waveContainerStyle:{},
+			isPlaying:false,
+			cutted:false,
 		}
 	},
 	methods:{
@@ -124,11 +141,14 @@ export default {
 			this.showCut = isChanged;
 			this.rangeValue=val;
 			if (!isChanged) return;
-			
+			console.log(val)
 			this.waveStyle.transform = 'translateX(-'+~~(3.20 * val[0])+'px)';
+			this.rightEdge.transform = 'translateX(-'+~~(3.20 * (100-val[1]) ) +'px)';
+			this.leftEdge.transform='translateX('+~~(3.20 * val[0])+'px)';
+
 
 			this.waveContainerStyle={
-				transform: 'translateX('+~~(3.20 * val[0])+'px)',
+				...this.leftEdge,
 				width:3.2*(val[1] - val[0]) + 'px'
 			}
 		},
@@ -139,17 +159,24 @@ export default {
 			this.imgObs.onNext()
 		},
 		cut(){
-			this.progress=0;
+			this.cutted=true;
+			this.v.d=false;
 			this.showCut = false;
 			this.$socket.emit('cut',{
 				id:this.v.id,
 				value:this.rangeValue
+			},(err,data)=>{
+				console.log(err,data)
+				Object.assign(this.v,{
+					...data
+				})
+				this.$forceUpdate()
 			});
 		}
 	},
 	sockets:{
 		cProgress:function(obj){
-			if (obj.progress)
+			if (obj.progress && !this.cutted)
 			 this.anim.to({x:obj.progress},1300).start();
 			Object.keys(obj).map(k=>{
 				//if (k!=='progress')
@@ -172,8 +199,9 @@ export default {
 				backgroundImage:'url(https://'+ API_HOST +'/wave/'+this.v._id+'?bo='+this.rand+')'
 			}
 		});
+
 		this.anim = new tween.Tween({x:0}).easing(tween.Easing.Quadratic.InOut).onUpdate(x=>{
-			this.progress=~~x.x;
+			this.progress=x.x;
 
 			this.waveContainerStyle={
 				width: (3.2 * x.x) + 'px'
@@ -203,23 +231,42 @@ export default {
 			 top:0;
 			 left: 0;
 		}
-		&,img,div {
+		&,img,.wave-bg {
 			background-size: contain;
 			width: 320px;
 			height: 80px;
 		}
+}
+.vertical-separator {
+	overflow: visible!important;
+	.mdi-content-cut::before {
+		font-size: 22px;
+		position: absolute;
+		top:0;
+		transform: translate(-10px,-10px) rotate(90deg)
+	}
 }
 .stats {
 	justify-content:space-between;
 	white-space: nowrap;
 	width: 90%;
 }
-
+#playerWave {
+	height: 30px;
+	width: 300px;
+	align-self: flex-end;
+	opacity: .4;
+	img {
+		height: 30px;
+		width: 100%;
+	}
+}
 #download-page {
 	justify-content:flex-start;
 	align-items:center;
 	overflow-y: scroll;
 	overflow-x: hidden;
+	padding-right: 17px;
 }
 .button {
 	position: relative;
@@ -276,6 +323,16 @@ export default {
 		background: -webkit-linear-gradient(top, hsl(43,100%,60%) 0%,hsl(47,70%,44%) 50%,hsl(43,73%,47%) 51%,hsl(44,80%,64%) 100%);
 		background: linear-gradient(to bottom, hsl(43,100%,60%) 0%,hsl(47,70%,44%) 50%,hsl(43,73%,47%) 51%,hsl(44,80%,64%) 100%);
 	}
+
+.vertical-separator {
+	position: absolute;
+	width: 2px;
+	height: 80px;
+	left:0;
+	top:0;
+	background: #ddd;
+
+}
 
 
 

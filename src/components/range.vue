@@ -97,13 +97,14 @@ export default {
     transform: translate3d(0, 0, 0)
 }
 .noUi-horizontal {
-    height: 18px;
-    width: 90%;
-    margin: 10px auto;
+    opacity: 0.01;
+    z-index: 999;
+    height: 78px;
+    width: 100%;
 }
 .noUi-horizontal .noUi-handle {
-    width: 34px;
-    height: 28px;
+    width: 50px;
+    height: 80px;
     left: -17px;
     top: -6px
 }
