@@ -3,22 +3,22 @@
 		<div v-if="v.title" class="f fc">
 			<thumb-video :v="v">
 			</thumb-video>
-			<div class="player f ja" v-if="progress>0">
+			<!--<div class="player f ja" v-if="progress>0">
 				<i class="material-icons mdi mdi-play" v-if="!isPlaying"></i>
 				<i v-else class="material-icons mdi mdi-pause"></i>
 
 				<div id="playerWave">
 					<img  :src="'https://'+ API_HOST +'/wave/'+v._id+'?bo='+rand"/>
 				</div>
-			</div>
+			</div> -->
 			<div class="stats f" v-if="v.viewCount && $route.name === 'download'">
-				<div>&nbsp;</div>
+				<div><i @click="stop()" v-if="isPlaying" class="material-icons mdi mdi-pause" /></div>
 				<div class="view-count">
 					<i class="material-icons mdi mdi-eye"></i> {{v.viewCount}}
 				</div>
 				
 			</div>
-			<h4> {{$t(v.msg)}} {{(progress && progress <100) ? '...'+ progress +'%':''}} </h4>
+			<h4> {{$t(v.msg)}} {{(progress && progress <100) ? '...'+ ~~progress +'%':''}} </h4>
 
 			<div class="wave">
 			<div :style="waveContainerStyle">
@@ -32,10 +32,10 @@
 
 				<div class="wave-bg" :style="'opacity:0.15;background-image:url(https://'+ API_HOST +'/wave/'+v._id+'?bo='+rand+')'"/>
 
-					<div class="vertical-separator" :style="leftEdge">
+				<div v-if="progress>100" class="vertical-separator" :style="leftEdge">
 						<i class="material-icons mdi mdi-content-cut"/>
-					</div>
-				<div class="vertical-separator" :style="[{left:'318px'},rightEdge]">
+				</div>
+				<div v-if="progress>100" class="vertical-separator" :style="[{left:'318px'},rightEdge]">
 					<i class="material-icons mdi mdi-content-cut"/>
 
 				 </div>
@@ -110,10 +110,13 @@ export default {
 			leftEdge:{},
 			waveContainerStyle:{},
 			isPlaying:false,
-			cutted:false,
+			audio:null
 		}
 	},
 	methods:{
+		stop:function(){
+			try{this.audio.pause();this.isPlaying=false;}catch(e){console.log('cant pause',this.audio)}
+		},
 		getLink:function(){
 			new Observable.create(sub => {
 				this.id = this.$route.params.id;
@@ -159,7 +162,6 @@ export default {
 			this.imgObs.onNext()
 		},
 		cut(){
-			this.cutted=true;
 			this.v.d=false;
 			this.showCut = false;
 			this.$socket.emit('cut',{
@@ -167,16 +169,15 @@ export default {
 				value:this.rangeValue
 			},(err,data)=>{
 				console.log(err,data)
-				Object.assign(this.v,{
-					...data
-				})
+				this.progress=101;
+				Object.assign(this.v,data)
 				this.$forceUpdate()
 			});
 		}
 	},
 	sockets:{
 		cProgress:function(obj){
-			if (obj.progress && !this.cutted)
+			if (obj.progress)
 			 this.anim.to({x:obj.progress},1300).start();
 			Object.keys(obj).map(k=>{
 				//if (k!=='progress')
@@ -184,6 +185,11 @@ export default {
 				if (k==='wave') this.retryImg();
 			})
 			this.$forceUpdate();
+		},
+		preview:function(tok){
+			this.audio = new Audio('https://' + API_HOST + tok )
+			this.audio.play()
+			this.isPlaying=true;
 		}
 	},
 	mounted() {
@@ -207,6 +213,11 @@ export default {
 				width: (3.2 * x.x) + 'px'
 			}
 		});
+   },
+   destroyed(){
+   		this.stop();
+   		delete this.imgObs
+   		delete this.anim;
    },
    metaInfo(){
    	return {
