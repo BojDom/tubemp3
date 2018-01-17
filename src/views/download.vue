@@ -12,7 +12,8 @@
 				</div>
 			</div> -->
 			<div class="stats f" v-if="v.viewCount && $route.name === 'download'">
-				<div><i @click="stop()" v-if="isPlaying" class="material-icons mdi mdi-pause" /></div>
+				<i @click="stop()" v-if="isPlaying" class="material-icons mdi mdi-pause" />
+				<i @click="play()" v-else class="material-icons mdi mdi-play" />
 				<div class="view-count">
 					<i class="material-icons mdi mdi-eye"></i> {{v.viewCount}}
 				</div>
@@ -115,7 +116,10 @@ export default {
 	},
 	methods:{
 		stop:function(){
-			try{this.audio.pause();this.isPlaying=false;}catch(e){console.log('cant pause',this.audio)}
+			try{this.audio.suspend();this.isPlaying=false;}catch(e){console.log('cant pause',e,this.audio)}
+		},
+		play:function(){
+			try{this.audio.resume();this.isPlaying=true;}catch(e){this.stop();console.log('cant play',e,this.audio)}
 		},
 		getLink:function(){
 			new Observable.create(sub => {
@@ -187,9 +191,21 @@ export default {
 			this.$forceUpdate();
 		},
 		preview:function(tok){
-			this.audio = new Audio('https://' + API_HOST + tok )
-			this.audio.play()
-			this.isPlaying=true;
+			this.audio = new (window.AudioContext || window.webkitAudioContext)();
+	        var source = this.audio.createBufferSource();
+	        var xhr = new XMLHttpRequest();
+	        xhr.open('GET', 'https://' + API_HOST + tok);
+	        xhr.responseType = 'arraybuffer';
+	        xhr.addEventListener('load', (r) =>{
+	            this.audio.decodeAudioData(xhr.response, buffer=> {
+	                        source.buffer = buffer;
+	                        source.connect(this.audio.destination);
+	                        source.loop = false;
+	                    });
+	            source.start(0);
+	            this.isPlaying=true
+	        });
+	        xhr.send();
 		}
 	},
 	mounted() {
@@ -244,6 +260,7 @@ export default {
 		}
 		&,img,.wave-bg {
 			background-size: contain;
+			background-repeat: no-repeat;
 			width: 320px;
 			height: 80px;
 		}

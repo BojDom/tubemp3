@@ -105,7 +105,7 @@ export default {
 .noUi-horizontal .noUi-handle {
     width: 50px;
     height: 80px;
-    left: -17px;
+    left: -30px;
     top: -6px
 }
 .noUi-vertical {
