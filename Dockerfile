@@ -1,6 +1,6 @@
-FROM node:slim
+FROM node:alpine
 COPY . /app
-RUN apt update && apt install git -y #python
+RUN apk update && apk add git -y #python
 WORKDIR /app
 RUN npm i --only=production
 RUN npm i -g pm2

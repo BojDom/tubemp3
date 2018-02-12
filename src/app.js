@@ -34,6 +34,7 @@ export function createApp(ssrContext) {
 		Vue.use(vso, scc.connect({
 			host: API_HOST,
 			secure: true,
+			ackTimeout: 999999999 ,
 			autoReconnectOptions: {
 				initialDelay: 1000, //milliseconds
 				randomness: 1000, //milliseconds

@@ -73,6 +73,7 @@ import { Observable , Subject} from 'rx-lite';
 import {mapState} from 'vuex';
 import tween from '@tweenjs/tween.js'
 import debounce from 'lodash.debounce';
+import {assign} from 'lodash';
 import range from '../components/range';
 import bar from '../components/ProgressBar'
 export default {
@@ -148,7 +149,7 @@ export default {
 			this.showCut = isChanged;
 			this.rangeValue=val;
 			if (!isChanged) return;
-			console.log(val)
+			//console.log(val)
 			this.waveStyle.transform = 'translateX(-'+~~(3.20 * val[0])+'px)';
 			this.rightEdge.transform = 'translateX(-'+~~(3.20 * (100-val[1]) ) +'px)';
 			this.leftEdge.transform='translateX('+~~(3.20 * val[0])+'px)';
@@ -174,17 +175,21 @@ export default {
 			},(err,data)=>{
 				console.log(err,data)
 				this.progress=101;
-				Object.assign(this.v,data)
-				this.$forceUpdate()
+				assign(this.v,data)
+				//this.anim.stop()
+				setTimeout(()=>{
+					this.$forceUpdate()
+				},400)
 			});
 		}
 	},
 	sockets:{
 		cProgress:function(obj){
+			if (obj.id !=this.v._id ) return;
 			if (obj.progress)
 			 this.anim.to({x:obj.progress},1300).start();
 			Object.keys(obj).map(k=>{
-				//if (k!=='progress')
+				if (k!=='progress')
 				this.v[k]=obj[k];
 				if (k==='wave') this.retryImg();
 			})

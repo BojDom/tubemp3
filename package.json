@@ -19,7 +19,7 @@
     "babel-polyfill": "^6.23.0",
     "compression": "^1.6.2",
     "cross-env": "^4.0.0",
-    "domi": "git+https://bitbucket.org/BojDom/tpl.git",
+    "domi": "https://bitbucket.org/BojDom/tpl.git",
     "express": "^4.15.3",
     "jsonwebtoken": "^8.1.0",
     "lodash.debounce": "^4.0.8",
