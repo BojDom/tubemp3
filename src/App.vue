@@ -78,17 +78,19 @@ export default {
 			fbUrl:'',
 			popup:'',
 			noQuota:false,
-			srcOpen: false
+			srcOpen: false,
+			subs:{}
 		}
 	},
 	sockets:{
 		connect: function () {
-			console.log('socket connected')
+			console.log('socket connectedd')
 		},
-		fbPopClose:function(){
-			try {this.popup.close()}catch(r){console.log(r)}
+		add:function(v){
+			this.$store.commit('addThumbnail',v)
 		},
 		login:function(data){
+			console.log('logged in',data)
 			this.fbUrl=data.fbUrl
 		},
 		noQuota:function(){
@@ -118,7 +120,7 @@ export default {
 	methods: {
 		fbLog(){
 			if (this.usr.fbUrl)
-			 this.popup=window.open(this.usr.fbUrl);
+			 this.popup=window.open(this.fbUrl);
 		}
 	},
 	computed: {
@@ -131,8 +133,12 @@ export default {
 			}
 			else if (["connect", "reconnect"].indexOf(n) > -1) {
 				this.$store.commit('setConnected', true);
+
+				this.$socket.subscribe(this.$socket.id+'/fbPopClose').watch(d=>{
+						try {this.popup.close()}catch(r){console.log(r)}
+				})
 				setTimeout(()=>{
-				this.$socket.emit('log', this.usr.token);
+					this.$socket.emit('log', this.usr.token);
 				},200)
 			}
 		},140),
@@ -280,6 +286,10 @@ export default {
 	width:100%;
 	a {color:#fff;flex-grow:1;width:0;white-space: nowrap;}
 	img {height: 40px;}
+
+}
+</style>
+ght: 40px;}
 
 }
 </style>

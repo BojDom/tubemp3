@@ -6,8 +6,6 @@ import { createRouter } from "./router";
 import { sync } from "vuex-router-sync";
 import * as filters from "./util/filters";
 import { createI18n } from "./store/i18n";
-import vso from 'vue-socket.io';
-import scc from 'socketcluster-client';
 import vueMeta from 'vue-meta';
 
 // register global utility filters.
@@ -30,18 +28,7 @@ export function createApp(ssrContext) {
 		Vue.config.debug = true;
 		Vue.config.devtools = true;
 	}
-	if (typeof document !== 'undefined')
-		Vue.use(vso, scc.connect({
-			host: API_HOST,
-			secure: true,
-			ackTimeout: 999999999 ,
-			autoReconnectOptions: {
-				initialDelay: 1000, //milliseconds
-				randomness: 1000, //milliseconds
-				multiplier: 1.5, //decimal
-				maxDelay: 4000 //milliseconds
-			},
-		}), store);
+
 
 	// create the app instance.
 	// here we inject the router, store and ssr context to all child components,
