@@ -51,6 +51,6 @@
   },
   "devDependencies": {
     "uglifyjs-webpack-plugin": "^1.2.2",
-    "uglify-es": "github:mishoo/UglifyJS2#harmony",
+    "uglify-es": "github:mishoo/UglifyJS2#harmony"
   }
 }
