@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import 'es6-promise/auto';
 import { createApp } from './app';
-import vso from 'vue-socket.io/src/Main';
+import vso from 'vue-socket.io';
 import scc from 'socketcluster-client';
 
 
