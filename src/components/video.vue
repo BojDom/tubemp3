@@ -1,5 +1,5 @@
 <template>
-	<div :id="'vid'+v._id" class="f fc video">
+	<div :id="'vid'+v._id" class="f fc video" :style="{width:w}">
 		<div class="thumb">
 			<img @click="goToDownload()" :src="v.img" />
 			<div class="dur f">{{v.dur}}</div>
@@ -17,12 +17,19 @@ export default {
 	},
 
 	props: {
-		"v": {}
+		"v": {},
+		"w":{
+			type:String,
+			default:'320px'
+		}
 	},
 	data() {
 		return {
 
 		}
+	},
+	mounted(){
+
 	},
 	methods:{
 		goToDownload:function(){

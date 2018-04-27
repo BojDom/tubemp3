@@ -18,6 +18,8 @@ export function createRouter() {
 		{ name: 'download',path:'/download/:id/:title?',component:_import('download')},
 		{ name:'search',path: '/search/:src', component: _import('search') },
 		{ name:'home',path: '/', component: _import('home') },
+		{ name:'profile',path: '/profile/:id', component: _import('profile') },
+		{ name:'profile',path: '/profile', component: _import('profile') },
 		{ name:'disconnected',path: '/disconnected', component: _import('disconnected') },
 		{ name:'404',path: '*', component: _import('home') }
     ]

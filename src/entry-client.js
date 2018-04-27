@@ -3,6 +3,7 @@ import 'es6-promise/auto';
 import { createApp } from './app';
 import vso from 'vue-socket.io';
 import scc from 'socketcluster-client';
+import fp2 from 'fingerprintjs2'
 
 
 
@@ -22,8 +23,18 @@ import scc from 'socketcluster-client';
 });*/
 
 const { app, router, store } = createApp({
-  lang: navigator.language || navigator.userLanguage
+  lang: (navigator.language || navigator.userLanguage || 'en' ).substr(0,2).toLowerCase()
 });
+  
+    Vue.use({
+      install(Vue){
+        Vue.mixin({
+          created(){
+           Vue.prototype.fp2 =  fp2;
+          }
+        })
+      }
+    })
 
     Vue.use(vso, scc.connect({
       host: API_HOST,

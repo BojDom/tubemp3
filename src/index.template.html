@@ -10,8 +10,15 @@
     <link rel="shortcut icon" sizes="64x64" href="/public/favicon.ico">
     <meta name="theme-color" content="hsl(2,77%,17%)">
     <link rel="manifest" href="/manifest.json">
-    <link rel="stylesheet" href="//cdn.materialdesignicons.com/1.9.32/css/materialdesignicons.min.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/2.3.54/css/materialdesignicons.min.css"> 
     <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a33c4ef9d192f0013743163&product=inline-share-buttons"></script>
+    <script>
+    if('serviceWorker' in navigator) {
+      navigator.serviceWorker
+               .register('/service-worker.js')
+               .then(function() { console.log("Service Worker Registered"); });
+    }
+  </script>
   </head>
   <body>
     <!--vue-ssr-outlet-->

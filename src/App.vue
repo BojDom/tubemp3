@@ -15,9 +15,11 @@
 						</div>
 						<div class="ttransition tzoom">
 							<div class="fullsize f fc nowrap login-icon">
-							<img v-if="usr.img" :src="usr.img"/>
-							<i @click="fbLog()" v-else class="f fc nowrap mdi mdi-login-variant">
-							</i>
+							<router-link to="/profile">	
+								<badge/>
+								<img v-if="usr.img" :src="usr.img"/>
+								<i v-else class="f fc nowrap mdi mdi-home-account"></i>
+							</router-link>
 							</div>
 						</div>
 					</div>
@@ -45,11 +47,13 @@
 			<a href="https://github.com/BojDom/tubemp3.co">
 				<img src="/public/img/git.svg"/>
 			</a>
-			<a></a>
+			<a id="changeLang" @click="langOpened=!langOpened"> <img :src="flag($i18n.locale)"/></a>
 			<a href="https://m.me/ddoremix">
 				<img src="/public/messenger.png"/>
 			</a>
 		</div>
+		<lang :langOpened="langOpened" @change="langOpened=false "></lang>
+		
 	</div>
 </template>
 
@@ -63,35 +67,31 @@ import reconnect from './components/reconnect.vue';
 import { mapState } from 'vuex';
 import autoComplete from './components/suggestions.vue'
 import _ from 'lodash.debounce';
-
+import badge from './components/badge'
+import langComponent from './components/lang'
 export default {
 	components: {
 		'reconnect': reconnect,
 		'search-bar': srcBar,
 		'auto-complete' : autoComplete,
 		'fb-c':fbC,
-		'noQuota':noQuota
+		'noQuota':noQuota,
+		'lang':langComponent,
+		badge
 	},
 	data() {
 		return {
 			q: "",
 			fbUrl:'',
-			popup:'',
 			noQuota:false,
 			srcOpen: false,
+			langOpened:false,
 			subs:{}
 		}
 	},
 	sockets:{
-		connect: function () {
-			console.log('socket connectedd')
-		},
 		add:function(v){
 			this.$store.commit('addThumbnail',v)
-		},
-		login:function(data){
-			console.log('logged in',data)
-			this.fbUrl=data.fbUrl
 		},
 		noQuota:function(){
 			this.noQuota=true;
@@ -102,7 +102,7 @@ export default {
 			if (this.isConnected) sub.next();
 			else this.$watch("isConnected", ()=>{ if (this.isConnected) sub.next();
 		})}).take(1).subscribe(ok=>{ 
-			try { if (localStorage.u) this.$store.commit('SOCKET_LOGIN', JSON.parse(localStorage.u)); } catch (err) { console.log(err); }
+			 this.$store.commit('LOCALSTORAGE_LOGIN')
 		});
 		["connect", "error", "disconnect", "reconnect", "reconnect_attempt", "reconnecting", "reconnect_error", "reconnect_failed", "connect_error", "connect_timeout", "connecting"]
 			.map(connEvent => {
@@ -110,6 +110,7 @@ export default {
 					this.$store.commit('CONNECTION_STATE', connEvent)
 				})
 			});
+		console.log(this.$i18n,navigator.language , navigator.userLanguage)
 
 		function animate(time) {
 			requestAnimationFrame(animate);
@@ -117,10 +118,17 @@ export default {
 		}
 		requestAnimationFrame(animate);
 	},
+	mounted(){
+
+		let fp = new this.fp2()
+		fp.get(function(){
+			console.log(arguments)
+		})
+	},
 	methods: {
-		fbLog(){
-			if (this.usr.fbUrl)
-			 this.popup=window.open(this.fbUrl);
+		flag(l){
+			if (l == 'en') l = 'gb'
+			return 'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.1.0/flags/4x3/'+l+'.svg'
 		}
 	},
 	computed: {
@@ -134,9 +142,6 @@ export default {
 			else if (["connect", "reconnect"].indexOf(n) > -1) {
 				this.$store.commit('setConnected', true);
 
-				this.$socket.subscribe(this.$socket.id+'/fbPopClose').watch(d=>{
-						try {this.popup.close()}catch(r){console.log(r)}
-				})
 				setTimeout(()=>{
 					this.$socket.emit('log', this.usr.token);
 				},200)
@@ -144,6 +149,7 @@ export default {
 		},140),
 		"$route":function(){
 			this.srcOpen=false;
+			this.langOpened=false;
 		}
 	},
 	beforeDestroy() {
@@ -209,6 +215,7 @@ export default {
 				flex-grow: 1;
 				width: 0;
 				height: 80%;
+				margin: 0 18px;
 				i,a{
 					color:@textColor;
 					height: 100%;
@@ -235,10 +242,15 @@ export default {
 			height: 100%;
 		}
 	}
-	.login-icon img {
-		max-height: 80px;
-		max-width: 60px;
-		border-radius: 8px;
+	.login-icon {
+		position: relative;
+		a{display: flex;align-items: center;justify-content: center;}
+		i {margin-bottom: -2px;}
+		img {
+			max-height: 80px;
+			max-width: 60px;
+			border-radius: 8px;
+		}
 	}
 }
 
@@ -256,6 +268,8 @@ export default {
 	&>div {
 		height: 100%;
 		align-items:flex-start;
+		overflow-y:scroll;
+		overflow-x: hidden;;
 	}
 }
 
@@ -276,6 +290,7 @@ export default {
   transform:scale(0);
   height: 0;
 }
+
 #footer {
 	height: @footerHeight;
 	position: fixed;
@@ -286,10 +301,8 @@ export default {
 	width:100%;
 	a {color:#fff;flex-grow:1;width:0;white-space: nowrap;}
 	img {height: 40px;}
-
-}
-</style>
-ght: 40px;}
-
+	#changeLang {
+		img {height: 30px;}		
+	}
 }
 </style>

@@ -14,6 +14,7 @@ export function createStore () {
       isConnected:false,
       autoCompleteList:[],
       locale:'it',
+      badgeVal:0,
       usr:{
         token:false
       }

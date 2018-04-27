@@ -40,6 +40,7 @@ export default {
         methods:{
 			startSrc(){
                 this.$store.commit('SOCKET_AUTOCOMPLETELIST',[])
+                this.$emit('src',true)
                 if (this.$store.state.isConnected && this.q.length>2)
 				{
                     this.$router.push({
