@@ -143,7 +143,9 @@ export default {
 				this.$store.commit('setConnected', true);
 
 				setTimeout(()=>{
-					this.$socket.emit('log', this.usr.token);
+
+					console.log('AUTH TOKEN',localStorage.getItem('socketCluster.authToken'))
+					this.$socket.emit('log',  'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imd1ZXN0LTI3LTA0LTE4MTA6NDc6NTgiLCJpYXQiOjE1MjQ4NjkyNzgsImV4cCI6MTU1NjQyNjg3OH0.gU0dggL640yWt28IwNM-QtSvkZ1wURXVJ1OWwGPHCxxcH9WCeNAdsLjyJE8K_hLgnmrWNglSbeJy5KnobNpreQ'   );
 				},200)
 			}
 		},140),

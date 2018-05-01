@@ -75,6 +75,12 @@ export default {
     	j:function(s){
     		return JSON.stringify(s)
     	},
+      fetchPlist:function(){
+          this.$socket.emit('query',{query:'plist'},(err,data)=>{
+              console.log('resp',data)
+              this.plist=data;
+          })        
+      },
       orderByTime:function(obj){
         return orderBy(obj, 'time','desc')
       },
@@ -104,10 +110,7 @@ export default {
             this.plist = JSON.parse(window.localStorage.plist || '{}');
     },
     mounted(){
-        this.$socket.emit('query',{query:'plist'},(err,data)=>{
-            console.log('resp',data)
-            this.plist=data;
-        })
+        this.fetchPlist()
         this.subscribeTo()
 
     },
@@ -117,7 +120,8 @@ export default {
     watch:{
         "usr.id":function(n,o){
              this.$socket.unsubscribe('priv/'+o+'/fbPopClose')
-             this.subscribeTo()
+             this.subscribeTo();
+             this.fetchPlist()
         }
     }
 }
@@ -205,6 +209,7 @@ export default {
     border-right: 1px solid white;
     flex-grow: 1;
     width: 0;
+    &:last-child {border: none;}
     &:hover i,&.selected i {
         color:hsl(200,100%,50%)
       }
@@ -223,6 +228,7 @@ ul {
 .period_list {
     .delimiter {
       padding: 4px 10px;
+      margin-top:   16px;
       border-radius: 4px;
       background: linear-gradient(30deg, hsl(200,20%,97%) 0%,hsl(200,21%,92%) 40%,hsl(205,18%,87%) 31%,hsla(210,25%,97%,10%) 80%,hsla(210,25%,97%,0%) 100%);
       color:#333;
