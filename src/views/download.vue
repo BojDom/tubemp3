@@ -42,7 +42,16 @@
 				 </div>
 				<range :value="rangeValue" @change="rangeChanged($event)"/>
 			</div>
-
+				<social-sharing  inline-template>
+				  <span class="social-buttons f ja">
+				      <network network="facebook">
+				        <button><i class="mdi mdi-facebook"></i></button>
+				      </network>
+				      <network network="whatsapp">
+				        <button><i class="mdi mdi-whatsapp"></i></button>
+				      </network>
+				  </span>
+				</social-sharing>			
 			<transition name="ffade" >
 				<div v-if="v.d" class="fullw f fc">
 					<div class="sharethis-inline-share-buttons"></div>
@@ -76,13 +85,16 @@ import debounce from 'lodash.debounce';
 import {assign} from 'lodash';
 import range from '../components/range';
 import bar from '../components/ProgressBar'
+import socialSharing from 'vue-social-sharing'
+
 export default {
 	name: "download",
 	components:{
 		'thumb-video':thumbVideo,
 		'loading':loading,
 		'bar':bar,
-		'range':range
+		'range':range,
+		'social-sharing':socialSharing
 	},
 	computed:{
 			...mapState(['isConnected','thumbnails']),
@@ -300,6 +312,7 @@ export default {
 	overflow-y: scroll;
 	overflow-x: hidden;
 	padding-right: 17px;
+	&>div {padding-bottom: 150px;}
 }
 .button {
 	position: relative;

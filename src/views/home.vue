@@ -1,6 +1,5 @@
 <template>
 	<div id="home">
-		<div class="sharethis-inline-share-buttons"></div>
 		<div class="results f fc" v-if="thumbnails.length>0">
 				<thumb-video v-for="v in thumbnails"  v-if="v._id" :key="v._id" :v="v">
 				</thumb-video>

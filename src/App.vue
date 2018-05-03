@@ -37,6 +37,16 @@
 			</transition>
 
 			<div class="page f">
+				<social-sharing  inline-template>
+				  <span class="social-buttons f ja">
+				      <network network="facebook">
+				        <button><i class="mdi mdi-facebook"></i></button>
+				      </network>
+				      <network network="whatsapp">
+				        <button><i class="mdi mdi-whatsapp"></i></button>
+				      </network>
+				  </span>
+				</social-sharing>
 				<transition>
 					<router-view></router-view>
 				</transition>
@@ -69,6 +79,7 @@ import autoComplete from './components/suggestions.vue'
 import _ from 'lodash.debounce';
 import badge from './components/badge'
 import langComponent from './components/lang'
+import socialSharing from 'vue-social-sharing'
 export default {
 	components: {
 		'reconnect': reconnect,
@@ -77,6 +88,7 @@ export default {
 		'fb-c':fbC,
 		'noQuota':noQuota,
 		'lang':langComponent,
+		'social-sharing':socialSharing,
 		badge
 	},
 	data() {
@@ -307,4 +319,7 @@ export default {
 		img {height: 30px;}		
 	}
 }
+.social-buttons  {width:160px;button  {width:40px;height: 40px;border-radius: 4px; i {font-size: 26px;color:#fff;text-shadow: 1px 1px 11px #fff}}}
+[data-link="#share-facebook"] button {background:#3b5998}
+[data-action="share/whatsapp/share"] button {background:#25d366}
 </style>
