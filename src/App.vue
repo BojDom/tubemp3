@@ -29,14 +29,14 @@
 	
 		<div class="main nowrap f fc">
 			<auto-complete v-show="srcOpen"></auto-complete>
-			<transition name="fadeDown">
+			<transition name="fade">
 				<reconnect v-if="!isConnected"></reconnect>
 			</transition>
 			<transition name="fade">
 				<noQuota v-if="noQuota"></noQuota>
 			</transition>
 
-			<div class="page f">
+			<div class="page f fc">
 				<social-sharing  inline-template>
 				  <span class="social-buttons f ja">
 				      <network network="facebook">
@@ -148,7 +148,7 @@ export default {
 	},
 	watch: {
 		"connState": _(function (n) {
-			if (["disconnect", "connect_error", "reconnect_error", "connect_timeout", "reconnect_failed"].indexOf(n) > -1) {
+			if (["disconnect", "connect_error", "reconnect_error", "connect_timeout", "reconnect_failed","error"].indexOf(n) > -1) {
 				this.$store.commit('setConnected', false);
 			}
 			else if (["connect", "reconnect"].indexOf(n) > -1) {
@@ -276,7 +276,7 @@ export default {
 
 .page {
 	height: 100%;
-	align-items: flex-start;
+	flex-wrap: nowrap;
 	max-width: 640px;
 	margin: 0 auto;
 	&>div {

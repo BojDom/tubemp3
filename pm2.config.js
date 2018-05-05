@@ -18,7 +18,7 @@ var app =
   },
     {
     "name": "http_tubemp3",
-    "script": '/www/setup/http/index.js',
+    "script": '/http/index.js',
     "instances": 1,
     "autorestart": true,
     "watch": false,

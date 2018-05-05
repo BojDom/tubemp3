@@ -5,7 +5,7 @@
 				</thumb-video>
 		</div>
 		<div v-else>
-			<loading></loading>
+			<loading v-if="isConnected"></loading>
 		</div>
 		<vue-inf v-if="thumbnails.length>0" style="width:100%" @infinite="nextLastPage" :distance="0"></vue-inf>
 	</div>
@@ -33,8 +33,7 @@ export default {
 		}
 	},
 	methods:{
-		nextLastPage(state){
-			console.log('nextPage',arguments);
+		nextLastPage(p){
  			setTimeout(()=>{
  				this.$socket.emit('last',this.page);
 			})
@@ -48,12 +47,9 @@ export default {
 	},
 	mounted() {
 		this.$store.commit('addThumbnail',false)
-		new Observable.create(sub => {
-			if (this.isConnected) sub.next();
-			else this.$watch("isConnected", ()=>{ if (this.isConnected) sub.next();})
-		}).take(1).subscribe(ok => {
-			this.nextLastPage()
-		});
+		if (this.isConnected) this.nextLastPage()
+		this.$watch("isConnected", ()=>{ if (this.isConnected) this.nextLastPage()})
+			
 	},
 /*	metaInfo() {
     return {

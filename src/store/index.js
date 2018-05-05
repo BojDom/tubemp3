@@ -11,7 +11,7 @@ export function createStore () {
     state: {
       thumbnails:[],
       connState:false,
-      isConnected:false,
+      isConnected:true,
       autoCompleteList:[],
       locale:'it',
       badgeVal:0,

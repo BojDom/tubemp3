@@ -64,5 +64,9 @@ export default {
 	},
 	"friends": {
 		it: "amici",
+	},
+	"reconnect_msg":{
+		it:"Se visualizzi questo messaggio per piú di qualche secondo prova a riaggiornare la pagina",
+		en:"if you see this message for more than few seconds try refreshing the page"
 	}
 }
