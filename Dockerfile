@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:8-alpine
 COPY . /app
 RUN apk update && apk add git python make
 WORKDIR /app
