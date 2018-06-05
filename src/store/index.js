@@ -13,6 +13,7 @@ export function createStore () {
       connState:false,
       isConnected:true,
       autoCompleteList:[],
+      activeAudio:true,
       locale:'it',
       badgeVal:0,
       usr:{

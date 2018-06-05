@@ -42,6 +42,9 @@ export default {
     #reconnect_msg {
     	width:80vw;
     	text-align: center;
+    	background: hsla(0,0%,0%,.5);
+    	padding: 10px;
+    	border-radius: 7px;
     }
 }
 </style>

@@ -110,6 +110,7 @@ export default {
 		}
 	},
 	beforeMount() {
+		if (process.env.NODE_ENV=='production') window.console.log=console.log=function(){}
 		new Observable.create(sub => {
 			if (this.isConnected) sub.next();
 			else this.$watch("isConnected", ()=>{ if (this.isConnected) sub.next();
@@ -131,11 +132,11 @@ export default {
 		requestAnimationFrame(animate);
 	},
 	mounted(){
-
-		let fp = new this.fp2()
+		 
+		/*let fp = new this.fp2()
 		fp.get(function(){
 			console.log(arguments)
-		})
+		})*/
 	},
 	methods: {
 		flag(l){

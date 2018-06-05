@@ -68,5 +68,13 @@ export default {
 	"reconnect_msg":{
 		it:"Se visualizzi questo messaggio per piú di qualche secondo prova a riaggiornare la pagina",
 		en:"if you see this message for more than few seconds try refreshing the page"
+	},
+	"activate_audio":{
+		it:'attiva audio',
+		en: 'activate audio'
+	},
+	"deactivate_audio":{
+		it:'disattiva audio',
+		en: 'deactivate audio'
 	}
 }

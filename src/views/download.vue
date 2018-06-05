@@ -12,8 +12,12 @@
 				</div>
 			</div> -->
 			<div class="stats f" v-if="v.viewCount && $route.name === 'download'">
-				<i @click="stop()" v-if="isPlaying" class="material-icons mdi mdi-pause" />
-				<i @click="play()" v-else class="material-icons mdi mdi-play" />
+				<div v-if="activeAudio">
+					<i v-if="!audio" class="material-icons mdi mdi-loading rotate" />
+					<i @click="stop()" v-if="isPlaying" class="material-icons mdi mdi-pause" />
+					<i @click="play()" v-if="!isPlaying&&audio" class="material-icons mdi mdi-play" />
+				</div>
+				<span :class="{deactivate:activeAudio}" @click="$store.commit('activateAudio',!activeAudio)">{{!activeAudio ? $t('activate_audio') : $t('deactivate_audio')}}</span>
 				<div class="view-count">
 					<i class="material-icons mdi mdi-eye"></i> {{v.viewCount}}
 				</div>
@@ -86,7 +90,7 @@ import {assign} from 'lodash';
 import range from '../components/range';
 import bar from '../components/ProgressBar'
 import socialSharing from 'vue-social-sharing'
-
+import moment from 'moment'
 export default {
 	name: "download",
 	components:{
@@ -97,7 +101,7 @@ export default {
 		'social-sharing':socialSharing
 	},
 	computed:{
-			...mapState(['isConnected','thumbnails']),
+			...mapState(['isConnected','thumbnails','activeAudio']),
 	},
 	beforeCreate(){
 		this.$route.params.title =  (typeof this.$route.params.title !=='string')
@@ -208,6 +212,7 @@ export default {
 			this.$forceUpdate();
 		},
 		preview:function(tok){
+			if (!this.activeAudio) return;
 			this.audio = new (window.AudioContext || window.webkitAudioContext)();
 	        var source = this.audio.createBufferSource();
 	        var xhr = new XMLHttpRequest();
@@ -226,6 +231,7 @@ export default {
 		}
 	},
 	mounted() {
+		console.log(moment)
 		new Observable.create(sub => {
 			if (this.isConnected) sub.next();
 			else this.$watch("isConnected", ()=>{ if (this.isConnected) sub.next();})
@@ -295,6 +301,13 @@ export default {
 	justify-content:space-between;
 	white-space: nowrap;
 	width: 90%;
+	span {font-size: 10px;padding: 10px;text-transform: uppercase;}
+	.deactivate {color:#888;}
+	.rotate {display: block;}
+	.view-count {text-align: right;flex-grow: 2}
+	i {
+		animation-duration: 1s;
+	}
 }
 #playerWave {
 	height: 30px;

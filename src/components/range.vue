@@ -97,16 +97,16 @@ export default {
     transform: translate3d(0, 0, 0)
 }
 .noUi-horizontal {
-    opacity: 0.01;
+
     z-index: 999;
     height: 78px;
     width: 100%;
 }
 .noUi-horizontal .noUi-handle {
     width: 50px;
-    height: 80px;
+    height: 77px;
     left: -30px;
-    top: -6px
+    top: 0px;
 }
 .noUi-vertical {
     width: 18px
@@ -118,13 +118,11 @@ export default {
     top: -17px
 }
 .noUi-target {
-    background: #FAFAFA;
+    background: transparent;
     border-radius: 4px;
-    border: 1px solid #D3D3D3;
-    box-shadow: inset 0 1px 1px #F0F0F0, 0 3px 6px -5px #BBB
 }
 .noUi-connect {
-    background: hsl(206,66%,55%);
+    background: transparent;
     border-radius: 4px;
     box-shadow: inset 0 0 3px rgba(51, 51, 51, .45);
     -webkit-transition: background 450ms;
@@ -137,11 +135,10 @@ export default {
     cursor: ns-resize
 }
 .noUi-handle {
-    border: 1px solid #D9D9D9;
+
     border-radius: 3px;
-    background: #FFF;
     cursor: default;
-    box-shadow: inset 0 0 1px #FFF, inset 0 1px 7px #EBEBEB, 0 3px 6px -3px #BBB
+    box-shadow: inset 0 0 1px hsla(0,0%,100%,.1), inset 0 1px 7px hsla(0,0%,100%,.1), 0 3px 6px -3px #BBB
 }
 .noUi-active {
     box-shadow: inset 0 0 1px #FFF, inset 0 1px 7px #DDD, 0 3px 6px -3px #BBB
@@ -155,7 +152,8 @@ export default {
     width: 1px;
     background: #E8E7E6;
     left: 14px;
-    top: 6px
+    top: 6px;
+    display: none;
 }
 .noUi-handle:after {
     left: 17px

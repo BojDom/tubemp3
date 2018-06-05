@@ -14,7 +14,7 @@ var messages = {
 	"en":  getLang('en'),
 	"it": getLang('it')
 }
-console.log('m',messages)
+//console.log('m',messages)
 export function createI18n(lang) {
 	var locale = (Object.keys(messages).indexOf(lang) > -1) ? lang : 'en';
 	return new VueI18n({

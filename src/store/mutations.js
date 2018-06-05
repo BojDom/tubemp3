@@ -8,6 +8,9 @@ export default {
   setBadgeVal: (state,val)=>{
     state.badgeVal = val
   },
+  activateAudio: (state,val)=>{
+    state.activeAudio = val;
+  },
   addThumbnail: (state, obj) => {
     if (!obj) state.thumbnails=[];
     else{

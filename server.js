@@ -166,7 +166,7 @@ app.get('*', isProd ? render : (req, res) => {
 	readyPromise.then(() => render(req, res));
 });
 
-
+if (process.env.cert) {
 const https = require('https');
 
 var PORT = process.env.PORT || 9111;
@@ -177,3 +177,13 @@ https.createServer({
 }, app).listen(PORT, '0.0.0.0', () => {
 	console.log(`server started at 0.0.0.0:${PORT} mode ${process.env.NODE_ENV}`);
 });
+}
+else {
+	const http = require('http');
+
+	var PORT = process.env.PORT || 9111;
+
+	http.createServer(app).listen(PORT, '0.0.0.0', () => {
+		console.log(`server started at 0.0.0.0:${PORT} mode ${process.env.NODE_ENV}`);
+	});
+}
