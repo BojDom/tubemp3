@@ -90,7 +90,7 @@ import {assign} from 'lodash';
 import range from '../components/range';
 import bar from '../components/ProgressBar'
 import socialSharing from 'vue-social-sharing'
-import moment from 'moment'
+//import moment from 'moment'
 export default {
 	name: "download",
 	components:{
@@ -231,7 +231,7 @@ export default {
 		}
 	},
 	mounted() {
-		console.log(moment)
+		// /console.log(moment)
 		new Observable.create(sub => {
 			if (this.isConnected) sub.next();
 			else this.$watch("isConnected", ()=>{ if (this.isConnected) sub.next();})

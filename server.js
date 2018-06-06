@@ -77,7 +77,7 @@ app.use(compression({
 }));
 app.use(favicon('./public/logo-48.png'));
 app.use('/dist', serve('./dist', true));
-app.use('/public', serve('./' + config.static, true));
+app.use('/public', serve('./public', true));
 app.use('/manifest.json', serve('./manifest.json', true));
 app.use('/service-worker.js', serve('./dist/service-worker.js'));
 
