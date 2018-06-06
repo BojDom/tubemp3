@@ -3,6 +3,7 @@ module.exports = {
 	project: "tubemp3",
 	title: "custom titleee",
 	publicPath: "/dist/",
+	static: '/dist/',
 	dev: {
 		dist: path.join(__dirname, 'dev'),
 		clientVars: {
