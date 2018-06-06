@@ -1,5 +1,5 @@
 {
-  "publicPath": "//dist/",
+  "publicPath": "/dist/",
   "all": [
     "0.2517bbfe2884c4a92d34.js",
     "1.c0dc76e7e10d79e25045.js",
@@ -8,11 +8,11 @@
     "4.7ad5ad1e6c300bae8159.js",
     "vendor.eae8fddaacf65737467f.js",
     "app.77a358de3794d9359e6e.js",
-    "manifest.a0a67f5eafd76e42d230.js",
+    "manifest.6b513dcb6dff1c9ac5e1.js",
     "common.77a358de3794d9359e6e.css"
   ],
   "initial": [
-    "manifest.a0a67f5eafd76e42d230.js",
+    "manifest.6b513dcb6dff1c9ac5e1.js",
     "vendor.eae8fddaacf65737467f.js",
     "app.77a358de3794d9359e6e.js"
   ],
