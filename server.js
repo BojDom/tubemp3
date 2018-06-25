@@ -20,13 +20,13 @@ const serverInfo =
 
 const app = express();
 
-if (isProd)
+if (process.env.TELEGRAM_URL)
 	var ioc = ioClient.connect(process.env.TELEGRAM_URL, {
 		secure: true,
 		'query': 'token=' + jwt.sign({
 			name: 'TubeMp3 ',
 			env: process.env.NODE_ENV
-		}, process.env.JWT_KEY, {
+		}, process.env.JWT_NGINX_KEY, {
 			algorithm: 'HS512'
 		})
 	});
@@ -166,23 +166,20 @@ app.get('*', isProd ? render : (req, res) => {
 	readyPromise.then(() => render(req, res));
 });
 
-if (process.env.cert) {
-const https = require('https');
-
-var PORT = process.env.PORT || 9111;
-
-https.createServer({
-	cert: fs.readFileSync(process.env.cert),
-	key: fs.readFileSync(process.env.pkey)
-}, app).listen(PORT, '0.0.0.0', () => {
-	console.log(`server started at 0.0.0.0:${PORT} mode ${process.env.NODE_ENV}`);
-});
+const cert =  process.env.cert ||`/app/certs/live/${process.env.DOMAIN}/fullchain.pem`;
+const pkey = process.env.pkey ||`/app/certs/live/${process.env.DOMAIN}/privkey.pem`;
+const PORT = process.env.SSL_PORT;
+if (fs.existsSync(cert)) {
+	const https = require('https');
+	https.createServer({
+		cert: fs.readFileSync(cert,'utf-8'),
+		key: fs.readFileSync(pkey,'utf-8')
+	}, app).listen(PORT, '0.0.0.0', () => {
+		console.log(`server started at 0.0.0.0:${PORT} mode ${process.env.NODE_ENV}`);
+	});
 }
 else {
 	const http = require('http');
-
-	var PORT = process.env.PORT || 9111;
-
 	http.createServer(app).listen(PORT, '0.0.0.0', () => {
 		console.log(`server started at 0.0.0.0:${PORT} mode ${process.env.NODE_ENV}`);
 	});

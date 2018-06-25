@@ -1,33 +1,33 @@
-const path  = require('path'),
-fs = require('fs');
-  
+const path=require('path');
 
-var app = 
-  [{
-    "name": "tubemp3",
-    "script": path.join(__dirname, 'server.js'),
-    "instances": 1,
-    "autorestart": true,
-    "exec_mode": "cluster",
-    "watch": false,
-    "env": {
-      "PORT": process.env.port || "9111",
-      "cert": process.env.cert,
-      "pkey": process.env.pkey,
-    }
-  },
-    {
-    "name": "http_tubemp3",
-    "script": '/http/index.js',
-    "instances": 1,
-    "autorestart": true,
-    "watch": false,
-    "env": {
-      "HTTP_PORT": process.env.HTTP_PORT || "9110"
-    }
-  }]
+var isProd = process.env.NODE_ENV == 'production';
 module.exports = {
+    apps: [
+        {
+            name: "app",
+            script: path.join(__dirname, "server.js"),
+            autorestart: true,
+            //log_type: "json",
+            restart_delay:4000,
+            watch: isProd ? false : ['server.js'],
+            env: {
+                cert: process.env.cert || `/app/certs/live/${process.env.DOMAIN}/fullchain.pem`,
+                pkey: process.env.pkey || `/app/certs/live/${process.env.DOMAIN}/privkey.pem`
+            },
+            env_dev:{
+                'NODE_ENV':'development'
+            },
+            env_prod:{
+                'NODE_ENV':'production'
+            }
+        },
+        {
+            name: "http",
+            script:  "./http.js",
+            instances: 1,
+            watch:['http.js'],
+        }
+    ],
 
-  apps : app,
-  deploy : {}
-}
+    deploy: {}
+};
