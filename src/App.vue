@@ -18,7 +18,7 @@
 							<router-link to="/profile">	
 								<badge/>
 								<img v-if="usr.img" :src="usr.img"/>
-								<i v-else class="f fc nowrap mdi mdi-home-account"></i>
+								<i v-else class="f fc nowrap mdi mdi-home-account" style="display:inline-flex" ></i>
 							</router-link>
 							</div>
 						</div>

@@ -1,9 +1,11 @@
 'use strict';
 
+require('dotenv').config({path:'../.env'});
 const  { exec , execFile } = require('child_process'),
+  {inspect} =require('util'),
   LE = require('greenlock'),
   path = require('path'),
-  ioClient = require('socket.io-client'),
+  scClient = require('socketcluster-client'),
   jwt = require('jsonwebtoken'),
   boot = require('./nginx/boot');
 
@@ -16,11 +18,7 @@ var leStore = require('le-store-certbot').create({
 
 var domains = [ process.env.DOMAIN ]
 
-var io = ioClient.connect('http://0.0.0.0:'+process.env.WSPORT, {'query': 'token=' + jwt.sign({app:process.env.DOMAIN}, process.env.JWT_NGINX_KEY, {algorithm: 'HS512'})})
-io.on('connect', async () => {
-  console.log('CONNECTED TO NGINX')
 
-});
 // ACME Challenge Handlers
 var leHttpChallenge = require('le-challenge-fs').create({
     webrootPath: __dirname ,                            // or template string such as
@@ -30,19 +28,23 @@ var leHttpChallenge = require('le-challenge-fs').create({
 var express = require('express');
 var app = express(); 
 
+var sc = scClient.connect({
+  host:'0.0.0.0:'+process.env.WSPORT,
+  query: {t :jwt.sign({app:process.env.DOMAIN}, process.env.JWT_NGINX_KEY, {algorithm: 'HS512'})}
+})
 
-  boot.http();
-  io.emit('nginxReload');
+sc.on('connect', async () => {
+  console.log('CONNECTED TO NGINX')
+  await boot.http();
+  sc.emit('nginxReload');
+  await new Promise(res=>{setTimeout(res,500)})
+  checkCerts(false)
+});
 
 
-app.get('/cert', async (req, res,next) => {
-
-
-  let isProd = req.query.p;
-
+async function checkCerts(isProd) {
 
   var le = LE.create({ 
- 
     store: leStore,
     version: 'v02',
     server: isProd ? 'https://acme-v02.api.letsencrypt.org/directory' : 'https://acme-staging-v02.api.letsencrypt.org/directory' ,
@@ -63,42 +65,38 @@ app.get('/cert', async (req, res,next) => {
   app.use('/', le.middleware());
 
 
-    
   let results = await le.check({ domains });
       if (results){
           certDone(results)
           return;        
       }
       else   le.register({    domains: domains }).then(async results => {
-          console.log('RESULTS', results)
-          if (!results)  {res.send('certs error');return;}
+          if (!results){  console.log(chalk.bgRed('NO RESULTS'))};
 
-          if (!isProd) {
-            res.send('certs done'+results._expiresAt);
-            
+          if (!isProd) {          
             let dest= `rm -rf /app/certs/live/${process.env.DOMAIN}`;
             console.log('delete',dest);  exec(dest);
+            await new Promise(res=>{setTimeout(res,500)})
+            checkCerts(true)
           } else {
-
             certDone(results)
           }
         });
         
-
-
-async function certDone(results){
+}
+async function certDone(){
       await boot.ssl();
       await new Promise(res => setTimeout(res, 500));
-      io.emit('nginxReload');
+      sc.emit('nginxReload');
       await new Promise(res => setTimeout(res, 500));
       exec(`pm2 start pm2.config.js --only app --env ${process.env.DOMAIN.startsWith('d.') ? 'dev' : 'prod'}`, (err, stdout, sterr) => {})
-
-       res.send( results ? results._expiresAt : 'okk') ;
+      /*execFile('/app/nginx/mongocert.sh',['/app/certs/live/'+ process.env.DOMAIN+'/'],(err,stdout,sterr)=>{
+              console.log(err,stdout,sterr)
+      })*/
 }
-})
-
 app.get('/hc',(req,res)=>{
-  res.send('okK')
+  console.log(inspect(req.headers))
+  res.send('okkK')
 })
 app.get('/', (req,res,next)=>{ 
     res.redirect('https://'+req.host)
