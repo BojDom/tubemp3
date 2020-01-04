@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import 'es6-promise/auto';
 import { createApp } from './app';
-import vso from 'vue-socket.io';
+import vso from 'src/store/vso/Main';
 import scc from 'socketcluster-client';
 import fp2 from 'fingerprintjs2'
 
@@ -36,17 +36,17 @@ const { app, router, store } = createApp({
       }
     })
 
-    Vue.use(vso, scc.connect({
+    Vue.use(new vso( scc.connect({
       host: API_HOST,
       secure: true,
-      ackTimeout: 999999999 ,
+      ackTimeout: 90000 ,
       autoReconnectOptions: {
         initialDelay: 1000, //milliseconds
         randomness: 1000, //milliseconds
         multiplier: 1.5, //decimal
         maxDelay: 4000 //milliseconds
       },
-    }), store);
+    }), store));
 // prime the store with server-initialized state.
 // the state is determined during SSR and inlined in the page markup.
 if (window.__INITIAL_STATE__) {

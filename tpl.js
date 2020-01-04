@@ -1,5 +1,6 @@
 const path = require('path');
 console.log('DOMAIN',process.env.DOMAIN)
+
 module.exports = {
 	project: "tubemp3",
 	title: "custom titleee",
@@ -8,7 +9,7 @@ module.exports = {
 	dev: {
 		dist: path.join(__dirname, 'dev'),
 		clientVars: {
-			API_HOST: JSON.stringify('apidev.'+process.env.DOMAIN),
+			API_HOST: JSON.stringify('apidev.tubemp3.pro'),
 			LOGO: "'https://"+process.env.DOMAIN+"/public/img/logo.jpg'",
 			__THEME__: JSON.stringify('dev')
 		}
@@ -16,7 +17,7 @@ module.exports = {
 	prod: {
 		dist: path.join(__dirname, 'dist'),
 		clientVars: {
-			API_HOST: JSON.stringify('api.'+process.env.DOMAIN),
+			API_HOST: JSON.stringify('api.tubemp3.pro'),
 			LOGO: "'https://"+process.env.DOMAIN+"/public/img/logo.jpg'",
 			__THEME__: JSON.stringify('default')
 		}

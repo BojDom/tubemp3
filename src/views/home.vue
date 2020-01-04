@@ -16,6 +16,7 @@ import thumbVideo from '../components/video';
 import { Observable } from 'rx-lite';
 import vueInf from '../components/InfiniteLoading.vue';
 import {mapState} from 'vuex';
+import {when} from 'mobx'
 export default {
 	name: "home",
 	components:{
@@ -46,9 +47,12 @@ export default {
 
 	},
 	mounted() {
+		when(()=>this.$connState.get()=='connect')
+			.then(()=>{
+				this.nextLastPage()
+			})
+		console.log('mobx',)
 		this.$store.commit('addThumbnail',false)
-		if (this.isConnected) this.nextLastPage()
-		this.$watch("isConnected", ()=>{ if (this.isConnected) this.nextLastPage()})
 			
 	},
 /*	metaInfo() {

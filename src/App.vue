@@ -62,7 +62,7 @@
 				<img src="/public/messenger.png"/>
 			</a>
 		</div>
-		<lang :langOpened="langOpened" @change="langOpened=false "></lang>
+		<lang :langOpened="langOpened" @change="langOpened=false"></lang>
 		
 	</div>
 </template>
@@ -222,9 +222,9 @@ export default {
 	.header,.scrolling-header, .header-btn {
 		height: @headerHeight;
 	}
-	.header-btn {
+	//.header-btn {
 
-	}
+	//}
 	.header-btn {
 		&>div {
 				flex-grow: 1;
