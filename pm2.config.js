@@ -10,10 +10,6 @@ module.exports = {
             //log_type: "json",
             restart_delay:4000,
             watch: isProd ? false : ['server.js'],
-            env: {
-                cert: process.env.cert || `/app/certs/live/${process.env.DOMAIN}/fullchain.pem`,
-                pkey: process.env.pkey || `/app/certs/live/${process.env.DOMAIN}/privkey.pem`
-            },
             env_dev:{
                 'NODE_ENV':'development'
             },
@@ -23,9 +19,14 @@ module.exports = {
         },
         {
             name: "http",
-            script:  "./http.js",
-            instances: 1,
+            script:  "./node_modules/myutils/http.js",
             watch:['http.js'],
+            env_dev:{
+                'NODE_ENV':'development'
+            },
+            env_prod:{
+                'NODE_ENV':'production'
+            }
         }
     ],
 

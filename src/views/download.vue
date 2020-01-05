@@ -23,7 +23,7 @@
 				</div>
 				
 			</div>
-			<h4> {{$t(v.msg)}} {{(progress && progress <100) ? '...'+ ~~progress +'%':''}} </h4>
+			<h4> {{$t(v.msg)}} {{(progress && (progress <100)) ? ('...'+ ~~progress +'%' ) :''}} </h4>
 
 			<div class="wave">
 			<div :style="waveContainerStyle">
@@ -138,27 +138,30 @@ export default {
 		play:function(){
 			try{this.audio.resume();this.isPlaying=true;}catch(e){this.stop();console.log('cant play',e,this.audio)}
 		},
-		getLink:function(){
-			new Observable.create(sub => {
-				this.id = this.$route.params.id;
+		getLink: async function(){
+
+			this.id = this.$route.params.id;
 					// esecuzione normale
-				if (this.thumbnails.length>0)
-					this.v = this.thumbnails.find(vid=>{
-						return vid._id === this.id
-					})
+			if (this.thumbnails.length>0)
+				this.v = this.thumbnails.find(vid=>{
+					return vid._id === this.id
+				})
 					// accesso url diretto o refresh
-				if (!this.v || !this.v.title) this.$socket.emit('getVid',{id:this.id},(err,data)=>{
+			if (!this.v || !this.v.title)
+			await new Promise(r=>{
+				this.$socket.emit('getVid',{id:this.id},(err,data)=>{
 					if (err) return;
 					this.v=data;
-					sub.next()
-				})
-					// what ?
-				else sub.next();
-			}).take(1).subscribe(ok => {
-				this.$socket.emit('getLink', {
-					id: this.id
+					r();
 				})
 			})
+					// what ?
+				//else sub.next();
+			
+			this.$socket.emit('getLink', {
+				id: this.id
+			})
+			
 		},
 		rangeChanged(val){
 			var isChanged = (val[0]!=this.rangeValue[0] || val[1]!=this.rangeValue[1])
@@ -204,7 +207,7 @@ export default {
 			if (obj.id !=this.v._id ) return;
 			if (obj.progress)
 			 this.anim.to({x:obj.progress},1300).start();
-			Object.keys(obj).map(k=>{
+			Object.keys(obj).forEach(k=>{
 				if (k!=='progress')
 				this.v[k]=obj[k];
 				if (k==='wave') this.retryImg();
@@ -255,8 +258,8 @@ export default {
    },
    destroyed(){
    		this.stop();
-   		delete this.imgObs
-   		delete this.anim;
+   		this.imgObs && this.imgObs.complete();
+   		//this.anim  && this.anim.stop();
    },
    metaInfo(){
    	return {

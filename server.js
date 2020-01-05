@@ -168,7 +168,8 @@ app.get('*', isProd ? render : (req, res) => {
 
 const cert =  process.env.cert ||`/app/certs/live/${process.env.DOMAIN}/fullchain.pem`;
 const pkey = process.env.pkey ||`/app/certs/live/${process.env.DOMAIN}/privkey.pem`;
-const PORT = process.env.SSL_PORT;
+const PORT = process.env.SSL_PORT || process.env.SOCKETCLUSTER_PORT ;
+
 if (fs.existsSync(cert)) {
 	const https = require('https');
 	https.createServer({

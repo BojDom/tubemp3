@@ -1,10 +1,10 @@
 {
-  "name": "TubeMp3.co",
+  "name": "TubeMp3-pro",
   "description": "A Vue.js project",
   "author": "IO <admin@friendsmusic.pro>",
   "private": true,
   "scripts": {
-    "dev": "pm2 start pm2.config.js --only=t-dev",
+    "dev": "pm2 start pm2.config.js --only app --env dev",
     "start": "pm2 start pm2.config.js --only=tubemp3",
     "build": "rm -rf ./dist && cd node_modules/domi/ && npm run build"
   },
@@ -12,20 +12,15 @@
     "node": ">=7.0",
     "npm": ">=4.0"
   },
-  "dependencies": {
-    "@tweenjs/tween.js": "^17.1.1",
+  "dependencies": { 
     "axios": "^0.16.1",
-    "babel-loader": "^7.1.2",
-    "babel-polyfill": "^6.23.0",
     "chalk": "^2.4.1",
-    "clientjs": "^0.1.11",
+    "babel-polyfill": "^6.23.0",
     "compression": "^1.6.2",
     "cross-env": "^4.0.0",
-    "domi": "https://bitbucket.org/BojDom/tpl.git",
+    "myutils": "https://bitbucket.org/BojDom/myutils.git",
     "dotenv": "^6.0.0",
     "express": "^4.15.3",
-    "fingerprintjs2": "^1.6.1",
-    "greenlock": "^2.2.20",
     "jsonwebtoken": "^8.1.0",
     "lodash.debounce": "^4.0.8",
     "lodash.get": "^4.4.2",
@@ -33,33 +28,34 @@
     "lodash.set": "^4.3.2",
     "lodash.throttle": "^4.1.1",
     "lru-cache": "^4.1.1",
-    "moment": "^2.22.1",
-    "nginx-conf": "^1.4.0",
-    "nouislider": "^10.1.0",
-    "progressbar.js": "^1.0.1",
-    "promise.prototype.finally": "^2.0.1",
+    "moment": "^2.22.1",  
     "remove": "^0.1.5",
-    "rx-lite": "^4.0.8",
     "serve-favicon": "^2.4.3",
     "socket.io-client": "^2.0.4",
     "socketcluster-client": "^9.0.2",
-    "vue": "^2.5.9",
-    "vue-i18n": "^7.3.3",
-    "vue-i18n-extensions": "^0.1.0",
-    "vue-infinite-loading": "^2.2.3",
-    "vue-meta": "^1.4.0",
-    "vue-router": "^2.5.0",
-    "vue-server-renderer": "^2.5.9",
-    "vue-social-sharing": "^2.3.3",
-    "vue-socket.io": "https://github.com/BojDom/Vue-Socket.io",
-    "vue-template-compiler": "^2.5.9",
-    "vue-template-loader": "^0.3.1",
-    "vue2-animate": "^1.0.4",
-    "vuex": "~2.3.1",
-    "vuex-router-sync": "^4.1.2"
+    "vue": "2",
+    "vue-server-renderer": "2"
+    
   },
   "devDependencies": {
-    "uglifyjs-webpack-plugin": "^1.2.2",
-    "uglify-es": "github:mishoo/UglifyJS2#harmony"
+
+    "@tweenjs/tween.js": "^17.1.1",
+    "vue-social-sharing": "^2.3.3",
+    
+    "clientjs": "^0.1.11",
+    "vue-template-compiler": "^2.5.9",
+    "fingerprintjs2": "^1.6.1",
+    "nouislider": "^10.1.0",
+    "promise.prototype.finally": "^2.0.1",
+    "progressbar.js": "^1.0.1",
+    "vuex": "~2.3.1",
+    "vue-i18n": "^7.3.3",
+    "vue-i18n-extensions": "^0.1.0",
+    "vue-router": "^2.5.0",
+    "vue2-animate": "^1.0.4",
+    "vuex-router-sync": "^4.1.2",
+    "vue-infinite-loading": "^2.2.3",
+    "vue-meta": "^1.4.0",
+    "domi": "https://bitbucket.org/BojDom/tpl.git"
   }
 }
