@@ -18,4 +18,4 @@ Run in hot reloading mode to edit website
 
 Build to production release
 
-```npm run build[/code]
+```npm run build```
