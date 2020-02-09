@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import 'es6-promise/auto';
 import { createApp } from './app';
-import vso from 'src/store/vso/Main';
+import vso from 'myutils/vso/Main';
 import scc from 'socketcluster-client';
-import fp2 from 'fingerprintjs2'
+
 
 
 
@@ -26,7 +26,7 @@ const { app, router, store } = createApp({
   lang: (navigator.language || navigator.userLanguage || 'en' ).substr(0,2).toLowerCase()
 });
   
-    Vue.use({
+/*     Vue.use({
       install(Vue){
         Vue.mixin({
           created(){
@@ -34,10 +34,10 @@ const { app, router, store } = createApp({
           }
         })
       }
-    })
-
+    }) */
+    console.log('API HOST',API_HOST)
     Vue.use(new vso( scc.connect({
-      host: API_HOST,
+      hostname: API_HOST,
       secure: true,
       ackTimeout: 90000 ,
       autoReconnectOptions: {

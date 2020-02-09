@@ -14,7 +14,8 @@
   </div>
 </template>
 <script>
-   import { Observable } from 'rx-lite';
+   import { fromEvent } from 'rxjs';
+   import {debounceTime} from 'rxjs/operators'
   /* eslint-disable no-console */
   import Spinner from '../../node_modules/vue-infinite-loading/src/components/Spinner';
   export default {
@@ -25,17 +26,6 @@
         isLoading:false,
         isNoMore:false,
         isNoResults:false,
-        stateChanger : {
-          loaded: () => {
-            this.$emit('$InfiniteLoading:loaded', { target: this });
-          },
-          complete: () => {
-            this.$emit('$InfiniteLoading:complete', { target: this });
-          },
-          reset: () => {
-            this.$emit('$InfiniteLoading:reset', { target: this });
-          }
-        }
       }
     },
     props:{
@@ -52,13 +42,22 @@
     },
     mounted(){
      
-      this.sub = new Observable.fromEvent(this.$el.parentNode,'scroll').debounce(300).subscribe((n)=>{
+      this.sub = fromEvent(this.$el.parentNode,'scroll').pipe(debounceTime(300)).subscribe((n)=>{
       try {
         let distance = ~~(this.$el.getBoundingClientRect().bottom - this.$el.parentNode.getBoundingClientRect().bottom);
           console.log(distance)
-          if ( distance <= this.distance)
-          {
-            this.$emit('infinite',this.stateChanger)
+          if ( distance <= this.distance){
+              this.$emit('infinite',{
+                  loaded: () => {
+                    this.$emit('$InfiniteLoading:loaded', { target: this });
+                  },
+                  complete: () => {
+                    this.$emit('$InfiniteLoading:complete', { target: this });
+                  },
+                  reset: () => {
+                    this.$emit('$InfiniteLoading:reset', { target: this });
+                  }
+            })
           }
         }catch(e){}
       });
@@ -69,7 +68,7 @@
           this.$nextTick(this.attemptLoad.bind(null, true));
         }
         if (!ev || ev.target !== this) {
-          console.warn(WARNINGS.STATE_CHANGER);
+          //console.warn(WARNINGS.STATE_CHANGER);
         }
       });
       this.$on('$InfiniteLoading:complete', (ev) => {
@@ -79,15 +78,15 @@
         this.$nextTick(() => {
           this.$forceUpdate();
         });
-        this.scrollParent.removeEventListener('scroll', this.scrollHandler);
+        //this.scrollParent.removeEventListener('scroll', this.scrollHandler);
         if (!ev || ev.target !== this) {
-          console.warn(WARNINGS.STATE_CHANGER);
+         // console.warn(WARNINGS.STATE_CHANGER);
         }
       });
 
     },
     destroyed(){
-     // this.sub._unsubscribe()
+      this.sub.unsubscribe()
     }
   }
 </script>

@@ -1,8 +1,7 @@
 <template>
 	<div id="download-page" class="scroll" >
 		<div v-if="v.title" class="f fc">
-			<thumb-video :v="v">
-			</thumb-video>
+			<thumb-video :v="v"/>
 			<!--<div class="player f ja" v-if="progress>0">
 				<i class="material-icons mdi mdi-play" v-if="!isPlaying"></i>
 				<i v-else class="material-icons mdi mdi-pause"></i>
@@ -23,14 +22,14 @@
 				</div>
 				
 			</div>
-			<h4> {{$t(v.msg)}} {{(progress && (progress <100)) ? ('...'+ ~~progress +'%' ) :''}} </h4>
+			<h4> {{$t(v.msg)}} <span v-if="progress && ( progress < 100 )"> {{'...'+ ~~progress +'%'}}</span> </h4>
 
 			<div class="wave">
 			<div :style="waveContainerStyle">
 
 				<div class="wave-bg" :style="waveStyle">
 					<!-- server solo per il retry -->
-					<img class="transparent" @error="retryImg()" :src="'https://'+ API_HOST +'/wave/'+v._id+'?bo='+rand"/>
+					<img class="transparent" @load="imgLoaded=true" :src="'https://'+ API_HOST +'/wave/'+v._id+'?bo='+rand"/>
 				</div>
 		
 			</div>
@@ -82,14 +81,16 @@
 <script>
 import loading from '../components/loading';
 import thumbVideo from '../components/video';
-import { Observable , Subject} from 'rx-lite';
+import { timer } from 'rxjs';
+import {takeWhen} from 'rxjs/operators'
 import {mapState} from 'vuex';
 import tween from '@tweenjs/tween.js'
-import debounce from 'lodash.debounce';
-import {assign} from 'lodash';
+
+import {assign,once} from 'lodash';
 import range from '../components/range';
 import bar from '../components/ProgressBar'
 import socialSharing from 'vue-social-sharing'
+import {when} from 'mobx'
 //import moment from 'moment'
 export default {
 	name: "download",
@@ -128,7 +129,8 @@ export default {
 			leftEdge:{},
 			waveContainerStyle:{},
 			isPlaying:false,
-			audio:null
+			audio:null,
+			waveLoaded:false
 		}
 	},
 	methods:{
@@ -179,12 +181,6 @@ export default {
 				width:3.2*(val[1] - val[0]) + 'px'
 			}
 		},
-		retryImg:function(){
-			setTimeout(()=>{
-				this.rand=Math.random()
-			},100)
-			this.imgObs.onNext()
-		},
 		cut(){
 			this.v.d=false;
 			this.showCut = false;
@@ -215,38 +211,36 @@ export default {
 			this.$forceUpdate();
 		},
 		preview:function(tok){
-			if (!this.activeAudio) return;
+			if (this.audio) return;
 			this.audio = new (window.AudioContext || window.webkitAudioContext)();
 	        var source = this.audio.createBufferSource();
 	        var xhr = new XMLHttpRequest();
 	        xhr.open('GET', 'https://' + API_HOST + tok);
 	        xhr.responseType = 'arraybuffer';
-	        xhr.addEventListener('load', (r) =>{
+	        xhr.addEventListener('load', once((r) =>{
 	            this.audio.decodeAudioData(xhr.response, buffer=> {
 	                        source.buffer = buffer;
 	                        source.connect(this.audio.destination);
 	                        source.loop = false;
-	                    });
-	            source.start(0);
+						});
+				if (this.activeAudio)
+	            	source.start(0);
 	            this.isPlaying=true
-	        });
+	        }));
 	        xhr.send();
 		}
 	},
-	mounted() {
-		// /console.log(moment)
-		new Observable.create(sub => {
-			if (this.isConnected) sub.next();
-			else this.$watch("isConnected", ()=>{ if (this.isConnected) sub.next();})
-		}).take(1).subscribe(ok => {
-			this.getLink()
-		});
-		this.imgObs= new Subject();
-		this.imgObs.debounce(300).subscribe(()=>{
+	async mounted() {
+		await when(()=>this.$connState.endsWith('connect'));
+		this.getLink();
+
+		timer(0,500).pipe(takeWhen(()=>!this.waveLoaded).subscribe(()=>{
 			this.waveStyle={				
 				backgroundImage:'url(https://'+ API_HOST +'/wave/'+this.v._id+'?bo='+this.rand+')'
 			}
-		});
+		},()=>{},()=>{
+			console.log('WAVE LOADED')
+		}));
 
 		this.anim = new tween.Tween({x:0}).easing(tween.Easing.Quadratic.InOut).onUpdate(x=>{
 			this.progress=x.x;
@@ -256,9 +250,17 @@ export default {
 			}
 		});
    },
+	watch:{
+		activeAudio:{
+			handler(v){
+				console.log('new activeadio')
+				if (!this.audio) return;
+				v ? this.audio.play() : this.audio.stop();
+			}
+		}
+	},
    destroyed(){
    		this.stop();
-   		this.imgObs && this.imgObs.complete();
    		//this.anim  && this.anim.stop();
    },
    metaInfo(){

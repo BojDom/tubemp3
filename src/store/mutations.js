@@ -1,7 +1,5 @@
 export default {
-  CONNECTION_STATE:(state,conn)=>{
-    state.connState=conn
-  },
+
   setConnected:(state,bool)=>{
     state.isConnected=bool;
   },
@@ -18,6 +16,9 @@ export default {
     	state.thumbnails.push(obj);
   	}
     
+  },
+  SET_CONNECTION_STATE:(state,data)=>{
+    state.connState = data;
   },
   SOCKET_AUTOCOMPLETELIST:(state,list)=>{
     console.log('autoCompleteList',list)

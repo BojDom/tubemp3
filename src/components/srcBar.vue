@@ -17,7 +17,7 @@
 </template>
 <script>
 var keyNav;
-import _ from 'lodash.debounce';
+import {debounce} from 'lodash';
 import {mapState} from 'vuex';
 export default {
 		name:"srcBar",
@@ -41,8 +41,7 @@ export default {
 			startSrc(){
                 this.$store.commit('SOCKET_AUTOCOMPLETELIST',[])
                 this.$emit('src',true)
-                if (this.$store.state.isConnected && this.q.length>2)
-				{
+                if (this.$store.state.isConnected && this.q.length>2){
                     this.$router.push({
                         name:'search',
                         params:{
@@ -53,7 +52,7 @@ export default {
                     })
                 }
 			},
-            getAutoComplete:_(function(){
+            getAutoComplete:debounce(function(){
                 if (this.$store.state.isConnected && this.q && this.q.length>2 ) 
                         this.$socket.emit('autocomplete',{q:this.q})
             },400)

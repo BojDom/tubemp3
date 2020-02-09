@@ -1,8 +1,7 @@
 <template>
 	<div id="search" class="scroll">
 	    <div class="results f fc" v-if="thumbnails.length>0">
-				<thumb-video v-for="v in thumbnails"  v-if="v._id" :key="v._id" :v="v">
-				</thumb-video>
+			<thumb-video v-for="v in thumbnails" :key="v._id" :v="v"/>
 	    </div>
 		<div v-else>
 			<loading></loading>
@@ -14,8 +13,7 @@
 import loading from '../components/loading';
 import thumbVideo from '../components/video';
 import vueInf from '../components/InfiniteLoading.vue';
-import { Observable } from 'rx-lite';
-import _ from 'lodash.debounce'
+import {when} from 'mobx'
 import {mapState} from 'vuex';
 	export default {
 		components:{
@@ -60,14 +58,11 @@ import {mapState} from 'vuex';
 				})
 			}
 		},
-		mounted(){
+		async mounted(){
 			this.$store.commit('addThumbnail',false);
-			new Observable.create(sub => {
-				if (this.isConnected) sub.next();
-				else this.$watch("isConnected", ()=>{ if (this.isConnected) sub.next();})
-			}).take(1).subscribe(ok => {
-					this.search();
-			});
+			await when(()=>this.$connState.endsWith('connect'));
+			this.search();
+
 		},
 	}
 </script>

@@ -62,35 +62,25 @@
 				<img src="/public/messenger.png"/>
 			</a>
 		</div>
-		<lang :langOpened="langOpened" @change="langOpened=false"></lang>
+		<lang-component :langOpened="langOpened" @change="langOpened=false"/>
 		
 	</div>
 </template>
 
 <script>
 import fbC from './components/fb';
-import { Observable } from 'rx-lite';
+
 import tween from '@tweenjs/tween.js'
-import srcBar from './components/srcBar.vue';
+import searchBar from './components/srcBar.vue';
 import noQuota from './components/noQuota.vue';
 import reconnect from './components/reconnect.vue';
-import { mapState } from 'vuex';
+import { mapState,mapGetters } from 'vuex';
 import autoComplete from './components/suggestions.vue'
-import _ from 'lodash.debounce';
 import badge from './components/badge'
 import langComponent from './components/lang'
 import socialSharing from 'vue-social-sharing'
 export default {
-	components: {
-		'reconnect': reconnect,
-		'search-bar': srcBar,
-		'auto-complete' : autoComplete,
-		'fb-c':fbC,
-		'noQuota':noQuota,
-		'lang':langComponent,
-		'social-sharing':socialSharing,
-		badge
-	},
+	components: { reconnect,	searchBar,		autoComplete,	fbC,	noQuota, langComponent,	socialSharing,	badge},
 	data() {
 		return {
 			q: "",
@@ -111,26 +101,8 @@ export default {
 	},
 	beforeMount() {
 		if (process.env.NODE_ENV=='production') window.console.log=console.log=function(){}
-		new Observable.create(sub => {
-			if (this.isConnected) sub.next();
-			else this.$watch("isConnected", ()=>{ if (this.isConnected) sub.next();
-		})}).take(1).subscribe(ok=>{ 
-			 this.$store.commit('LOCALSTORAGE_LOGIN')
-		});
-		["connect", "error", "disconnect", "reconnect", "reconnect_attempt", "reconnecting", "reconnect_error", "reconnect_failed", "connect_error", "connect_timeout", "connecting"]
-			.map(connEvent => {
-				this.$socket.on(connEvent, () => {
-					this.$store.commit('CONNECTION_STATE', connEvent)
-				})
-			});
-		console.log(this.$i18n,navigator.language , navigator.userLanguage)
-
-		function animate(time) {
-			requestAnimationFrame(animate);
-			tween.update(time);
-		}
-		requestAnimationFrame(animate);
 	},
+
 	mounted(){
 		 
 		/*let fp = new this.fp2()
@@ -145,23 +117,11 @@ export default {
 		}
 	},
 	computed: {
-		...mapState(['connState', 'isConnected','usr'])
+		...mapState(['connState','usr']),
+		...mapGetters(['isConnected'])
 	},
 	watch: {
-		"connState": _(function (n) {
-			if (["disconnect", "connect_error", "reconnect_error", "connect_timeout", "reconnect_failed","error"].indexOf(n) > -1) {
-				this.$store.commit('setConnected', false);
-			}
-			else if (["connect", "reconnect"].indexOf(n) > -1) {
-				this.$store.commit('setConnected', true);
 
-				setTimeout(()=>{
-
-					console.log('AUTH TOKEN',localStorage.getItem('socketCluster.authToken'))
-					this.$socket.emit('log',   localStorage.getItem('socketCluster.authToken')  );
-				},200)
-			}
-		},140),
 		"$route":function(){
 			this.srcOpen=false;
 			this.langOpened=false;

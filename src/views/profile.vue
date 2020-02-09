@@ -11,9 +11,9 @@
           <div class="f fc" :class="{selected:viewStyle=='friends'}" @click="viewStyle = 'friends'"><i class="mdi mdi-account-group"></i><i>{{$t('following')}}</i></div>
           <div class="f fc" :class="{selected:viewStyle=='me'}" @click="viewStyle = 'me'"><i class="mdi mdi-account"></i><i>{{$t('me')}}</i></div>
       </div>
-        <ul class="period_list" v-for="(p,k) in period" v-if="viewStyle=='periodic'">
+        <ul class="period_list" v-for="(p,k) in period" :key="p.name">
             <li class="delimiter">{{$t(k)}}</li>
-            <li v-for="v in orderByTime(p)">
+            <li v-for="v in orderByTime(p)" :key="v._id">
               <thumb-video :key="v._id" :v="v" w="280px"></thumb-video>
             </li>           
         </ul>
@@ -22,9 +22,8 @@
 </template>
 <script>
 import {mapState} from 'vuex';
-import { Observable } from 'rx-lite';
 import moment from 'moment'
-import orderBy from 'lodash.orderby'
+import {orderBy} from 'lodash'
 import thumbVideo from '../components/video';
 export default {
     name:'profile',
@@ -127,8 +126,8 @@ export default {
 }
 </script>
 <style scoped lang="less">
-#profile {
-}
+/* #profile {
+} */
 #plist {width: 320px;}
 #slb {
     height: 120px;

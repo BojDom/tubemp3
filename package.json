@@ -12,50 +12,44 @@
     "node": ">=7.0",
     "npm": ">=4.0"
   },
-  "dependencies": { 
-    "axios": "^0.16.1",
+  "dependencies": {
+    "axios": "latest",
+    "@tweenjs/tween.js": "^17.1.1",
     "chalk": "^2.4.1",
     "babel-polyfill": "^6.23.0",
+    "rxjs": "latest",
     "compression": "^1.6.2",
+    "babel-preset-es2015": "latest",
+    "babel-preset-stage-2": "latest",
     "cross-env": "^4.0.0",
     "myutils": "https://bitbucket.org/BojDom/myutils.git",
     "dotenv": "^6.0.0",
     "express": "^4.15.3",
     "jsonwebtoken": "^8.1.0",
-    "lodash.debounce": "^4.0.8",
-    "lodash.get": "^4.4.2",
-    "lodash.orderby": "^4.6.0",
-    "lodash.set": "^4.3.2",
-    "lodash.throttle": "^4.1.1",
+    "lodash": "latest",
     "lru-cache": "^4.1.1",
-    "moment": "^2.22.1",  
+    "moment": "^2.22.1",
     "remove": "^0.1.5",
     "serve-favicon": "^2.4.3",
-    "socket.io-client": "^2.0.4",
-    "socketcluster-client": "^9.0.2",
-    "vue": "2",
-    "vue-server-renderer": "2"
-    
-  },
-  "devDependencies": {
-
-    "@tweenjs/tween.js": "^17.1.1",
+    "socketcluster-client": "14",
     "vue-social-sharing": "^2.3.3",
-    
-    "clientjs": "^0.1.11",
-    "vue-template-compiler": "^2.5.9",
-    "fingerprintjs2": "^1.6.1",
-    "nouislider": "^10.1.0",
-    "promise.prototype.finally": "^2.0.1",
-    "progressbar.js": "^1.0.1",
+    "vue": "2",
+    "vue-template-compiler": "2",
+    "pm2": "latest",
+    "vue-meta": "2",
+    "vue-infinite-loading": "^2.2.3",
     "vuex": "~2.3.1",
     "vue-i18n": "^7.3.3",
     "vue-i18n-extensions": "^0.1.0",
     "vue-router": "^2.5.0",
     "vue2-animate": "^1.0.4",
+    "progressbar.js": "^1.0.1",
     "vuex-router-sync": "^4.1.2",
-    "vue-infinite-loading": "^2.2.3",
-    "vue-meta": "^1.4.0",
+    "promise.prototype.finally": "^2.0.1",
+    "nouislider": "^10.1.0",
+    "vue-server-renderer": "2"
+  },
+  "devDependencies": {
     "domi": "https://bitbucket.org/BojDom/tpl.git"
   }
 }

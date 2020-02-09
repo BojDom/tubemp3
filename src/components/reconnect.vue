@@ -16,7 +16,7 @@ export default {
 			this.showMsg=true;
 		},2500)
 	},
-	beforeCreate:function(){
+	mounted:function(){
 		this.height=(window.innerHeight - document.querySelector('#footer').offsetHeight)+'px'
 	},
 	data:function(){
@@ -33,7 +33,7 @@ export default {
 
 #reconnect {
     width: 100vw;
-
+	height: 100vh;
     position: fixed;
     top: 0;
     left: 0;

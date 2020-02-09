@@ -9,27 +9,14 @@ const {	createBundleRenderer } = require('vue-server-renderer');
 const config = require('./tpl');
 const isProd = process.env.NODE_ENV === 'production';
 const useMicroCache = process.env.MICRO_CACHE !== 'false';
-const ioClient = require('socket.io-client'),
-	jwt = require('jsonwebtoken');
 
 const { directive } = require('vue-i18n-extensions');
 
-const serverInfo =
-	`express/${require('express/package.json').version} ` +
-	`vue-server-renderer/${require('vue-server-renderer/package.json').version}`;
 
 const app = express();
+require('myutils/botConn');
 
-if (process.env.TELEGRAM_URL)
-	var ioc = ioClient.connect(process.env.TELEGRAM_URL, {
-		secure: true,
-		'query': 'token=' + jwt.sign({
-			name: 'TubeMp3 ',
-			env: process.env.NODE_ENV
-		}, process.env.JWT_NGINX_KEY, {
-			algorithm: 'HS512'
-		})
-	});
+
 const template = fs.readFileSync(resolve('./src/index.template.html'), 'utf-8');
 
 function createRenderer(bundle, options) {
@@ -105,7 +92,6 @@ function render(req, res) {
 	res.header('Pragma', 'no-cache');
 
 	res.setHeader("Content-Type", "text/html");
-	res.setHeader("Server", serverInfo);
 
 	const handleError = err => {
 		if (err && err.code === 404) {

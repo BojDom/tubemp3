@@ -1,8 +1,8 @@
 <template>
 	<div id="home">
 		<div class="results f fc" v-if="thumbnails.length>0">
-				<thumb-video v-for="v in thumbnails"  v-if="v._id" :key="v._id" :v="v">
-				</thumb-video>
+			<thumb-video v-for="v in thumbnails"  :key="v._id" :v="v"/>
+
 		</div>
 		<div v-else>
 			<loading v-if="isConnected"></loading>
@@ -13,7 +13,6 @@
 <script>
 import loading from '../components/loading';
 import thumbVideo from '../components/video';
-import { Observable } from 'rx-lite';
 import vueInf from '../components/InfiniteLoading.vue';
 import {mapState} from 'vuex';
 import {when} from 'mobx'

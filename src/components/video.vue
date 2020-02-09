@@ -1,11 +1,11 @@
 <template>
-	<div :id="'vid'+v._id" class="f fc video" :style="{width:w}">
+	<div :id="'vid'+v._id" class="f fc video" :style="{width:w}" v-if="v">
 		<div class="thumb">
 			<img @click="goToDownload()" :src="v.img" />
 			<div class="dur f">{{v.dur}}</div>
 		</div>
 		<div class="title">
-			<h3>{{v.title}}</h3>
+			<h3 v-html="v.title"></h3>
 		</div>
 	</div>
 </template>
