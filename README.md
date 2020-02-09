@@ -7,15 +7,15 @@ tubemp3.pro website
 
 Install dependencies
 
-[code]npm i[/code]
+```npm i```
 or 
-[code]yarn[/code]
+```yarn```
 
 Run in hot reloading mode to edit website
 
-[code]npm run dev[/code]
+```npm run dev```
 
 
 Build to production release
 
-[code]npm run build[/code]
+```npm run build[/code]
