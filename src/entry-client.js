@@ -3,7 +3,7 @@ import 'es6-promise/auto';
 import { createApp } from './app';
 import vso from 'myutils/vso/Main';
 import scc from 'socketcluster-client';
-
+import {when} from 'mobx'
 
 
 
@@ -40,6 +40,7 @@ const { app, router, store } = createApp({
       hostname: API_HOST,
       secure: true,
       ackTimeout: 90000 ,
+      authEngine:null,
       autoReconnectOptions: {
         initialDelay: 1000, //milliseconds
         randomness: 1000, //milliseconds
@@ -55,7 +56,7 @@ if (window.__INITIAL_STATE__) {
 
 // wait until router has resolved all async before hooks
 // and async components...
-router.onReady(() => {
+router.onReady(async () => {
   // Add router hook for handling asyncData.
   // Doing it after initial route is resolved so that we don't double-fetch
   // the data that we already have. Using router.beforeResolve() so that all
@@ -81,6 +82,10 @@ router.onReady(() => {
     }).catch(next);
   });*/
 
+  let t =  localStorage.getItem('socketCluster.authToken');
+  app.$socket.emit('log',t);
+  await  when(()=>app.$authToken.get().id)
+  //console.log('aut',app.$authToken.get().id,app.$socket.channels,store.state.connState);
   // actually mount to DOM
   app.$mount('#app');
 });

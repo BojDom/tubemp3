@@ -60,7 +60,7 @@ import {mapState} from 'vuex';
 		},
 		async mounted(){
 			this.$store.commit('addThumbnail',false);
-			await when(()=>this.$connState.endsWith('connect'));
+			await when(()=>this.$connState.get().endsWith('connect'));
 			this.search();
 
 		},

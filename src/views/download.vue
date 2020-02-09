@@ -66,7 +66,7 @@
 					<div v-else class="button" id="cutButton">
 						<a @click="cut">
 							<i class="mdi mdi-content-cut"></i> | 
-								{{$t('cut')}}
+								 {{$t('cut')}}
 						</a>
 					</div>
 
@@ -82,7 +82,7 @@
 import loading from '../components/loading';
 import thumbVideo from '../components/video';
 import { timer } from 'rxjs';
-import {takeWhen} from 'rxjs/operators'
+import {takeWhile} from 'rxjs/operators'
 import {mapState} from 'vuex';
 import tween from '@tweenjs/tween.js'
 
@@ -206,7 +206,7 @@ export default {
 			Object.keys(obj).forEach(k=>{
 				if (k!=='progress')
 				this.v[k]=obj[k];
-				if (k==='wave') this.retryImg();
+				//if (k==='wave') /this.retryImg();
 			})
 			this.$forceUpdate();
 		},
@@ -217,30 +217,33 @@ export default {
 	        var xhr = new XMLHttpRequest();
 	        xhr.open('GET', 'https://' + API_HOST + tok);
 	        xhr.responseType = 'arraybuffer';
-	        xhr.addEventListener('load', once((r) =>{
+	        xhr.addEventListener('load',(r) =>{
 	            this.audio.decodeAudioData(xhr.response, buffer=> {
 	                        source.buffer = buffer;
 	                        source.connect(this.audio.destination);
 	                        source.loop = false;
 						});
-				if (this.activeAudio)
-	            	source.start(0);
-	            this.isPlaying=true
-	        }));
+				source.start(0);
+					
+				if (!this.activeAudio) {
+					this.stop();
+				}
+	            	
+	        });
 	        xhr.send();
 		}
 	},
 	async mounted() {
-		await when(()=>this.$connState.endsWith('connect'));
+		await when(()=>this.$connState.get().endsWith('connect'));
 		this.getLink();
 
-		timer(0,500).pipe(takeWhen(()=>!this.waveLoaded).subscribe(()=>{
+		timer(0,500).pipe(takeWhile(()=>!this.waveLoaded)).subscribe(()=>{
 			this.waveStyle={				
 				backgroundImage:'url(https://'+ API_HOST +'/wave/'+this.v._id+'?bo='+this.rand+')'
 			}
 		},()=>{},()=>{
 			console.log('WAVE LOADED')
-		}));
+		});
 
 		this.anim = new tween.Tween({x:0}).easing(tween.Easing.Quadratic.InOut).onUpdate(x=>{
 			this.progress=x.x;
@@ -255,7 +258,7 @@ export default {
 			handler(v){
 				console.log('new activeadio')
 				if (!this.audio) return;
-				v ? this.audio.play() : this.audio.stop();
+				v ? this.play() : this.stop();
 			}
 		}
 	},

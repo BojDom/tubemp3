@@ -33,7 +33,7 @@ export default {
 	},
 	"cut": {
 		it: "ritaglia",
-		en: ""
+		en: "Cut audio"
 	},
 	"login_with_facebook": {
 		it: "accedi con facebook",
