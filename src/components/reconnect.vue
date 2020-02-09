@@ -1,5 +1,5 @@
 <template>
-<div id="reconnect"  class="f fc" :style="{height:height}">
+<div id="reconnect"  class="f fc">
 	<loading :spinner="true"></loading>
 	<div id="reconnect_msg"  v-show="showMsg">{{$t('reconnect_msg')}}</div>
 </div>
@@ -17,7 +17,7 @@ export default {
 		},2500)
 	},
 	mounted:function(){
-		this.height=(window.innerHeight - document.querySelector('#footer').offsetHeight)+'px'
+		
 	},
 	data:function(){
 		return {
