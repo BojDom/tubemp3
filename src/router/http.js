@@ -1,4 +1,4 @@
-import axios from 'axios';
+/* import axios from 'axios';
 require('promise.prototype.finally').shim();
 
 const api = axios.create({
@@ -14,3 +14,4 @@ const api = axios.create({
   }
 });
 export default api;
+ */

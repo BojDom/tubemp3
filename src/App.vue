@@ -37,8 +37,10 @@
 			</transition>
 
 			<div class="page f fc">
+				
 				<social-sharing  inline-template>
 				  <span class="social-buttons f ja">
+					  
 				      <network network="facebook">
 				        <button><i class="mdi mdi-facebook"></i></button>
 				      </network>
@@ -68,9 +70,8 @@
 </template>
 
 <script>
-import fbC from './components/fb';
 
-import tween from '@tweenjs/tween.js'
+
 import searchBar from './components/srcBar.vue';
 import noQuota from './components/noQuota.vue';
 import reconnect from './components/reconnect.vue';
@@ -80,7 +81,7 @@ import badge from './components/badge'
 import langComponent from './components/lang'
 import socialSharing from 'vue-social-sharing'
 export default {
-	components: { reconnect,	searchBar,		autoComplete,	fbC,	noQuota, langComponent,	socialSharing,	badge},
+	components: { reconnect,	searchBar,		autoComplete,	noQuota, langComponent,	socialSharing,	badge},
 	data() {
 		return {
 			q: "",
@@ -100,15 +101,11 @@ export default {
 		}
 	},
 	beforeMount() {
-		if (process.env.NODE_ENV=='production') window.console.log=console.log=function(){}
+		//if (process.env.NODE_ENV=='production') window.console.log=console.log=function(){}
 	},
 
 	mounted(){
-		 
-		/*let fp = new this.fp2()
-		fp.get(function(){
-			console.log(arguments)
-		})*/
+
 	},
 	methods: {
 		flag(l){
@@ -118,10 +115,9 @@ export default {
 	},
 	computed: {
 		...mapState(['connState','usr']),
-		...mapGetters(['isConnected'])
+		...mapState(['isConnected'])
 	},
 	watch: {
-
 		"$route":function(){
 			this.srcOpen=false;
 			this.langOpened=false;
@@ -145,7 +141,7 @@ export default {
 </script>
 
 <style lang="less">
-@import '../node_modules/vue2-animate/src/vue2-animate.less';
+//@import '../node_modules/vue2-animate/src/vue2-animate.less';
 @theme: "./less/themes/dev";
 @import "@{theme}";
 @import './less/main.less';

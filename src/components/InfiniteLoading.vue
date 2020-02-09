@@ -2,7 +2,7 @@
   <div class="infinite-loading-container">
     <div :class="{transparent:!isLoading}" class="spinner-wrapper">
       <slot name="spinner">
-        <spinner :spinner="spinner" />
+        <!-- <spinner :spinner="spinner" /> -->
       </slot>
     </div>
     <div class="infinite-status-prompt" v-show="isNoResults">
@@ -17,9 +17,9 @@
    import { fromEvent } from 'rxjs';
    import {debounceTime} from 'rxjs/operators'
   /* eslint-disable no-console */
-  import Spinner from '../../node_modules/vue-infinite-loading/src/components/Spinner';
+  //import Spinner from '../../node_modules/vue-infinite-loading/src/components/Spinner';
   export default {
-    components:{spinner:Spinner},
+  //  components:{spinner:Spinner},
     data(){
       return {
         sub:null,

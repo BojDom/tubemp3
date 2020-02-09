@@ -6,6 +6,10 @@ module.exports = {
 	title: "custom titleee",
 	publicPath: "/dist/",
 	static: 'dist/',
+
+	root: path.join(__dirname),
+	src: path.join(__dirname,'src'),
+	indexSsr:  path.join(__dirname,'src/entry-server.js'),
 	dev: {
 		dist: path.join(__dirname, 'dev'),
 		clientVars: {

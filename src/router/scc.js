@@ -1,4 +1,4 @@
-import scc from 'socketcluster-client';
+/* import scc from 'socketcluster-client';
 
 
 export default scc.connect({
@@ -10,4 +10,4 @@ export default scc.connect({
 				multiplier: 1.5, //decimal
 				maxDelay: 4000 //milliseconds
 			},
-		})
+		}) */

@@ -4,7 +4,7 @@
 </div>
 </template>
 <script>
-import tween from '@tweenjs/tween.js'
+//import tween from '@tweenjs/tween.js'
 import { mapState } from 'vuex'
 export default {
     name:"badge",
@@ -16,9 +16,9 @@ export default {
     data(){
     	return {
     		r:0,
-    		bounce:new tween.Tween({r:0}).onUpdate(v=>{
+    	/* 	bounce:new tween.Tween({r:0}).onUpdate(v=>{
     			this.r = v.r
-    		})
+    		}) */
     	}
     },
     computed:{
@@ -26,12 +26,12 @@ export default {
     },
     mounted(){
     	let delay = 500;
-    	let blink = ()=>{
+    	/* let blink = ()=>{
     		this.bounce.to({r:(this.r+360)},275).repeat(1).start()
     		if (delay<10000)	delay+=1000;
     		setTimeout(blink,delay)
     	}
-		setTimeout(blink.bind(this),delay)
+		setTimeout(blink.bind(this),delay) */
     }
 
 }

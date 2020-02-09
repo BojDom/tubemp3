@@ -33,6 +33,7 @@ export default context => {
         });
       })).then(() => {
         isDev && console.log(`data pre-fetch: ${Date.now() - s}ms`);
+        
         // After all preFetch hooks are resolved, our store is now
         // filled with the state needed to render the app.
         // Expose the state on the render context, and let the request handler
@@ -40,6 +41,9 @@ export default context => {
         // store to pick-up the server-side state without having to duplicate
         // the initial data fetching on the client.
         context.state = store.state;
+        store.state.siteOptions = context.siteOptions;
+        store.state.gtagId = 'UA-21065259-9';
+        store.state.path = context.url.split('/').slice(1);
         resolve(app);
       }).catch(reject);
     }, reject);

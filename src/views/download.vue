@@ -84,11 +84,11 @@ import thumbVideo from '../components/video';
 import { timer } from 'rxjs';
 import {takeWhile} from 'rxjs/operators'
 import {mapState} from 'vuex';
-import tween from '@tweenjs/tween.js'
+import {Tween,Easing} from 'es6-tween'
 
 import {assign,once} from 'lodash';
 import range from '../components/range';
-import bar from '../components/ProgressBar'
+
 import socialSharing from 'vue-social-sharing'
 import {when} from 'mobx'
 //import moment from 'moment'
@@ -97,7 +97,6 @@ export default {
 	components:{
 		'thumb-video':thumbVideo,
 		'loading':loading,
-		'bar':bar,
 		'range':range,
 		'social-sharing':socialSharing
 	},
@@ -245,7 +244,7 @@ export default {
 			console.log('WAVE LOADED')
 		});
 
-		this.anim = new tween.Tween({x:0}).easing(tween.Easing.Quadratic.InOut).onUpdate(x=>{
+		this.anim = new Tween({x:0}).easing(Easing.Quadratic.InOut).onUpdate(x=>{
 			this.progress=x.x;
 
 			this.waveContainerStyle={

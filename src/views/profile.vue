@@ -22,7 +22,7 @@
 </template>
 <script>
 import {mapState} from 'vuex';
-import moment from 'moment'
+//import moment from 'moment'
 import {orderBy} from 'lodash'
 import thumbVideo from '../components/video';
 export default {
@@ -32,7 +32,7 @@ export default {
     },
     computed:{
         ...mapState(['isConnected','usr']),
-        period:function(){
+        period:function(){/* 
             var now = moment();
             let obj = {}
             let whenAgo = (diff,n)=>{
@@ -52,7 +52,7 @@ export default {
                 obj[wa][a] = this.plist[a]
              })
             return obj
-        }
+         */}
     },
     data(){
         return {
@@ -62,12 +62,12 @@ export default {
             subs:{
 
             },
-            periods:{
+            periods:{/* 
                 "today":moment(0).add(1,'days').diff(moment(0)),
                 "yesterday":moment(0).add(2,'days').diff(moment(0)),
                 "thisWeek":moment(0).add(7,'days').diff(moment(0)),
                 "thisMonth":moment(0).add(30,'days').diff(moment(0)),
-                }
+                 */}
         }
     },
     methods:{

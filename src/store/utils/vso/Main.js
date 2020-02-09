@@ -24,11 +24,10 @@ export default  class vso {
         Vue.prototype.$connState = observable.box("");
         Vue.prototype.$socket = this.connection;
 
-        this.connection.on('authenticate',(s)=>{
-            Vue.prototype.$authToken.set( this.connection.authToken );
-        })
+        this.connection.on('authenticate',(s)=>{Vue.prototype.$authToken.set( this.connection.authToken );})
+        
         observe(Vue.prototype.$authToken,data=>{
-            if (!data.oldValue || !data.oldValue._id || !data.newValue || !data.newValue._id || data.newValue._id == data.oldValue._id) return;
+     if (!data.oldValue || !data.oldValue._id || !data.newValue || !data.newValue._id || data.newValue._id == data.oldValue._id) return;
             let newc = {}
             Emitter.channels.forEach((cs,_uid)=>{
                 newc[_uid] = {}
