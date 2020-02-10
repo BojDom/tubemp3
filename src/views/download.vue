@@ -200,8 +200,10 @@ export default {
 	sockets:{
 		cProgress:function(obj){
 			if (obj.id !=this.v._id ) return;
-			if (obj.progress)
-			 this.anim.to({x:obj.progress},1300).start();
+			if (obj.progress) {
+				this.anim._valuesStart = this.anim.object;
+				this.anim.to({x:obj.progress},1300).start();
+			}
 			Object.keys(obj).forEach(k=>{
 				if (k!=='progress')
 				this.v[k]=obj[k];
