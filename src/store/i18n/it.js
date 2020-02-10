@@ -71,10 +71,10 @@ export default {
 	},
 	"activate_audio":{
 		it:'attiva audio',
-		en: 'activate audio'
+		en: 'enable audio preview'
 	},
 	"deactivate_audio":{
 		it:'disattiva audio',
-		en: 'deactivate audio'
+		en: 'disable audio'
 	}
 }

@@ -10,7 +10,7 @@ const config = require('./tpl');
 const isProd = process.env.NODE_ENV === 'production';
 const useMicroCache = process.env.MICRO_CACHE !== 'false';
 
-//const { directive } = require('@intlify/vue-i18n-extensions');
+const { directive } = require('@intlify/vue-i18n-extensions');
 
 
 const app = express();
@@ -28,9 +28,9 @@ function createRenderer(bundle, options) {
 		}),
 		basedir: resolve('./dist'),
 		runInNewContext: false,
-		/* directives: {
+		directives: {
       		t: directive
-    	} */
+    	}
 	}));
 }
 

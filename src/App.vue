@@ -70,7 +70,7 @@
 </template>
 
 <script>
-
+import {autoPlay} from 'es6-tween'
 
 import searchBar from './components/srcBar.vue';
 import noQuota from './components/noQuota.vue';
@@ -105,7 +105,7 @@ export default {
 	},
 
 	mounted(){
-
+		autoPlay(true)
 	},
 	methods: {
 		flag(l){

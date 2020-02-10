@@ -24,12 +24,12 @@
 			</div>
 			<h4> {{$t(v.msg)}} <span v-if="progress && ( progress < 100 )"> {{'...'+ ~~progress +'%'}}</span> </h4>
 
-			<div class="wave">
+			<div class="wave" v-if="v._id">
 			<div :style="waveContainerStyle">
 
 				<div class="wave-bg" :style="waveStyle">
 					<!-- server solo per il retry -->
-					<img class="transparent" @load="imgLoaded=true" :src="'https://'+ API_HOST +'/wave/'+v._id+'?bo='+rand"/>
+					<img class="transparent" @load="waveLoaded=true" :src="'https://'+ API_HOST +'/wave/'+v._id+'?bo='+rand"/>
 				</div>
 		
 			</div>
@@ -205,7 +205,7 @@ export default {
 			Object.keys(obj).forEach(k=>{
 				if (k!=='progress')
 				this.v[k]=obj[k];
-				//if (k==='wave') /this.retryImg();
+				//if (k==='wave') this.retryImg();
 			})
 			this.$forceUpdate();
 		},
@@ -237,14 +237,16 @@ export default {
 		this.getLink();
 
 		timer(0,500).pipe(takeWhile(()=>!this.waveLoaded)).subscribe(()=>{
+			this.rand= Math.random();
 			this.waveStyle={				
 				backgroundImage:'url(https://'+ API_HOST +'/wave/'+this.v._id+'?bo='+this.rand+')'
 			}
+
 		},()=>{},()=>{
 			console.log('WAVE LOADED')
 		});
 
-		this.anim = new Tween({x:0}).easing(Easing.Quadratic.InOut).onUpdate(x=>{
+		this.anim = new Tween({x:0}).easing(Easing.Quadratic.InOut).on('update',x=>{
 			this.progress=x.x;
 
 			this.waveContainerStyle={
@@ -261,7 +263,7 @@ export default {
 			}
 		}
 	},
-   destroyed(){
+   beforeDestroy() {
    		this.stop();
    		//this.anim  && this.anim.stop();
    },

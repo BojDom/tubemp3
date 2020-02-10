@@ -3,7 +3,7 @@
 	</div>
 </template>
 <script>
-//import nouislider from 'nouislider'
+import nouislider from 'nouislider'
 export default {
 	name:'range',
 	props:{
