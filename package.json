@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@intlify/vue-i18n-extensions": "^1.0.0",
-    "axios": "0.18",
+    "axios": "0.21",
     "babel-polyfill": "^6.23.0",
     "chalk": "^2.4.1",
     "compression": "^1.6.2",
