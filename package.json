@@ -24,7 +24,7 @@
     "dotenv": "^6.0.0",
     "es6-tween": "latest",
     "express": "^4.15.3",
-    "jsonwebtoken": "^8.1.0",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "latest",
     "lru-cache": "^4.1.1",
     "myutils": "https://bitbucket.org/BojDom/myutils.git",
